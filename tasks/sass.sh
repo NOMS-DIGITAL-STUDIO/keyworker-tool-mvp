@@ -20,3 +20,5 @@ rm -fr .tmp
 
 # copy additional assets to public folder
 cp -fr ./bower_components/bootstrap-sass/assets/fonts ./public
+cp -fr ./assets/fonts ./public
+cp -fr ./assets/images ./public
