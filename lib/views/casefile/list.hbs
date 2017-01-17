@@ -1,0 +1,38 @@
+<header>
+  <h1>{{ page_title }}</h1>
+<header>
+
+{{#if caseFiles}}
+<ul class="media-list">
+  {{#each caseFiles as |casefile| }}
+  <li class="media" id="{{ casefile.casefile_id }}">
+    <div class="media-left">
+      <a href="./{{ casefile.casefile_id }}">
+        <img class="media-object" src="{{ casefile.offender.image }}" alt="Head shot of {{ casefile.offender.given_name }} {{ casefile.offender.surname }}" style="height: 100px; width: 100px">
+      </a>
+    </div>
+    <div class="media-body">
+      <div class="pull-right">
+        <ul class="list-inline">
+          <li><span class="badge badge-info" title="Vunerable Person">VP</span></li>
+          <li><span class="badge badge-info" title="Arsonist">A</span></li>
+        </ul>
+      </div>
+      <h4 class="media-heading">{{ casefile.offender.given_name }} {{ casefile.offender.surname }}</h4>
+      <ul class="list-unstyled">
+        <li>Key Worker: unassigned</li>
+        <li>Prison Offender Manager: unassigned</li>
+      </ul>
+      <div class="pull-right">
+        <ul class="list-unstyled">
+          <li><a class="btn btn-default" href="./{{ casefile.casefile_id }}/assign">Assign Staff</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+  </li>
+  {{/each}}
+</ul>
+{{else}}
+<div class="alert alert-info"><strong>No offenders found:</strong> there were no new offenders located for you to assign</div>
+{{/if}}

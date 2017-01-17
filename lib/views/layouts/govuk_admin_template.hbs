@@ -4,23 +4,26 @@
 <!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <title>{{#> page_title}}{{ app_title }}{{/page_title}}</title>
+    <title>{{#if page_title}}{{ page_title }}{{else}}{{ app_title }}{{/if}}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>(function(d){d.className=d.className.replace(/^no-js\b/,'js');}(document.documentElement));</script>
     {{!-- jQuery and Bootstrap --}}
-    {{!-- >javascript_include "govuk-admin-template" --}}
+    {{javascript_include "jquery" }}
+    {{javascript_include "bootstrap" }}
+    {{javascript_include "main" }}
     {{#> favicon}}
       {{#if environment_style}}
-        {{!-- >favicon_link ("govuk_admin_template/favicon-" + environment_style + ".png") --}}
+        {{!-- >favicon_link ("images/govuk_admin_template/favicon-" + environment_style + ".png") --}}
       {{else}}
-        {{!-- >favicon_link "govuk_admin_template/favicon.png" --}}
+        {{!-- >favicon_link "images/govuk_admin_template/favicon.png" --}}
       {{/if}}
     {{/favicon}}
     {{#> head}}{{/head}}
+    {{stylesheet_link "main" }}
     {{!-- CSS resets and fixes for Bootstrap 3 in IE7 --}}
     <!--[if lte IE 7]>
-      {{!-- >stylesheet_link "govuk_admin_template/bootstrap-ie7" %>
+      {{stylesheet_link "govuk_admin_template/bootstrap-ie7" }}
     <![endif]-->
     {{!--
       // HTML5 and bootstrap shims, for <= IE8 support of HTML5 elements
@@ -28,7 +31,7 @@
       // that rules and styles can be correctly calculated.
     --}}
     <!--[if lte IE 8]>
-      {{!-- >javascript_include "lte-ie8" --}}
+      {{javascript_include "lte-ie8" }}
     <![endif]-->
   </head>
   <body{{#if environment_style}} class="environment-{{ environment_style }}"{{/if}}>
@@ -52,7 +55,7 @@
                 <span class="icon-bar"></span>
               </a>
             {{/if}}
-            {{!-- >link_to app_title home=app_home_path class='navbar-brand' --}}
+            {{link_to app_title app_home_path 'navbar-brand'}}
             {{#if environment_label}}
               <div class="environment-label">{{ environment_label }}</div>
             {{/if}}
@@ -61,14 +64,16 @@
             <nav role="navigation" class="collapse navbar-collapse">
               {{#if navbar_items}}
                 <ul class="nav navbar-nav">
-                  {{ navbar_items }}
+                  {{#each navbar_items as |navbar_item| }}
+                  <li><a href="{{ navbar_item.url }}">{{ navbar_item.label }}</a></li>
+                  {{/each}}
                 </ul>
               {{/if}}
 
               {{#if GovukAdminTemplate.config.show_signout}}
                 <div class="navbar-text pull-right">
-                  {{!-- >link_to current_user.name Plek.current.find('signon') --}}
-                  &bull; {{!-- >link_to 'Sign out' '/auth/gds/sign_out' --}}
+                  {{link_to current_user.name '/auth/user_profile'}}
+                  &bull; {{link_to 'Sign out' '/auth/sign_out'}}
                 </div>
               {{/if}}
 

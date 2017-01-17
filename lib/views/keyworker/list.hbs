@@ -1,0 +1,23 @@
+<header>
+  <h1>{{ page_title }}</h1>
+<header>
+
+{{#if keyWorkers}}
+<ul class="media-list">
+  {{#each keyWorkers as |keyworker| }}
+  <li class="media" id="{{ keyworker.keyworker_id }}">
+    <div class="media-body">
+      <h4 class="media-heading">{{ keyworker.given_name }} {{ keyworker.surname }}</h4>
+      <div class="pull-right">
+        <ul class="list-unstyled">
+          <li><a class="btn btn-default" href="./{{ keyworker.keyworker_id }}/assign">Assign Case</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+  </li>
+  {{/each}}
+</ul>
+{{else}}
+<div class="alert alert-info"><strong>No key workers found:</strong> there were no staff in the key worker role found to be and supervised by you</div>
+{{/if}}

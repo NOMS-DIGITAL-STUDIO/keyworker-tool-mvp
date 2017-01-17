@@ -1,0 +1,73 @@
+<article id="{{ casefile.casefile_id }}">
+  <h1>[{{caseFile.casefile_id}}] Case file for {{caseFile.offender.given_name}} {{caseFile.offender.surname}}</h1>
+  <div class="row">
+    <div class="col-md-2">
+      <a href="./{{ casefile.casefile_id }}" class="thumbnail">
+        <img src="{{ casefile.offender.image }}" alt="Head shot of {{ casefile.offender.given_name }} {{ casefile.offender.surname }}" style="height: 100px; width: 100px">
+      </a>
+    </div>
+    <div class="col-md-2 pull-right">
+      <ul class="list-inline">
+        <li><span class="badge badge-info" title="Vunerable Person">VP</span></li>
+        <li><span class="badge badge-info" title="Arsonist">A</span></li>
+      </ul>
+    </div>
+    <div class="col-md-8">
+      <ul class="list-unstyled">
+        <li>Key Worker: unassigned</li>
+        <li>Prison Offender Manager: unassigned</li>
+      </ul>
+      <ul class="list-unstyled">
+        <li><a class="btn btn-default" href="./{{ casefile.casefile_id }}/assign">Assign Staff</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">New Session Notes</label>
+        <div class="col-sm-8">
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+        <div class="col-sm-2">
+          <button type="submit" class="btn btn-primary">Add Note</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <h2>Previous Notes</h2>
+
+    <div class="row">
+      <div class="col-sm-2 text-right">
+        <time datetime="2008-02-14 20:00" style="font-weight:bold;">12th January 2017</time>
+      </div>
+      <div class="col-sm-8" style="border-bottom:1px solid #ccc;margin-bottom:12px">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam orci, rhoncus at sapien in,
+          euismod gravida massa. In consequat purus sed mauris commodo, id ultricies elit scelerisque.
+          Suspendisse at vehicula lacus. Ut massa odio, ultrices eu cras amet.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 text-right">
+        <time datetime="2008-02-14 20:00" style="font-weight:bold;">3rd January 2017</time>
+      </div>
+      <div class="col-sm-8" style="border-bottom:1px solid #ccc;margin-bottom:12px">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam orci, rhoncus at sapien in,
+          euismod gravida massa. In consequat purus sed mauris commodo, id ultricies elit scelerisque.
+          Suspendisse at vehicula lacus. Ut massa odio, ultrices eu cras amet.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 text-right">
+        <time datetime="2008-02-14 20:00" style="font-weight:bold;">27th December 2016</time>
+      </div>
+      <div class="col-sm-8">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam orci, rhoncus at sapien in,
+          euismod gravida massa. In consequat purus sed mauris commodo, id ultricies elit scelerisque.
+          Suspendisse at vehicula lacus. Ut massa odio, ultrices eu cras amet.</p>
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,22 @@
+{
+  "name": "noms-express-admin",
+  "homepage": "https://github.com/mattonfoot/express-bootstrap",
+  "authors": [
+    "Matt Smith <mattonfoot@gmail.com>"
+  ],
+  "description": "A bootstrap project for rapid experimentation using GDS admin templates",
+  "main": "./assets/main.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7"
+  }
+}

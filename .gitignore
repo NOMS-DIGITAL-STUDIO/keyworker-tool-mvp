@@ -16,7 +16,10 @@ browser
 containers/express/dist
 
 node_modules
+bower_components
 npm-debug.log
 
 .DS_Store
 *-temp
+
+lib/public
