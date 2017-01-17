@@ -1,15 +1,19 @@
 <article id="{{ caseFile.casefile_id }}">
-  <h1><small>{{caseFile.casefile_id}}</small><br/>{{page_title}}</h1>
+  <h1>{{page_title}}</h1>
   <div class="row">
     <div class="col-md-2">
       <div class="thumbnail">
-        <img src="{{ caseFile.offender.image }}" alt="Head shot of {{ caseFile.offender.given_name }} {{ caseFile.offender.surname }}" style="height: 100px; width: 100px">
+        <img src="{{ caseFile.offender.image }}" alt="Head shot of {{ caseFile.offender.given_name }} {{ caseFile.offender.surname }}">
+        <p class="text-center"><strong>{{caseFile.casefile_id}}</strong></p>
       </div>
     </div>
     <div class="col-md-2 pull-right">
       <ul class="list-inline">
-        <li><span class="badge badge-info" title="Vunerable Person">VP</span></li>
-        <li><span class="badge badge-info" title="Arsonist">A</span></li>
+        <li><span class="label label-default" title="on IEP">IEP</span></li>
+        <li><span class="label label-default" title="on ACCT">ACCT</span></li>
+        <li><span class="label label-default" title="NPS/CRC Offedner">NPS</span></li>
+        <li><span class="label label-default" title="Vunerable Person">VP</span></li>
+        <li><span class="label label-default" title="Arsonist">A</span></li>
       </ul>
     </div>
     <div class="col-md-8">
@@ -30,7 +34,7 @@
           <textarea class="form-control" rows="3"></textarea>
         </div>
         <div class="col-sm-2">
-          <button type="submit" class="btn btn-primary">Add Note</button>
+          <button type="submit" class="btn btn-primary">Record note</button>
         </div>
       </div>
     </form>
@@ -41,7 +45,8 @@
 
     <div class="row">
       <div class="col-sm-2 text-right">
-        <time datetime="2008-02-14 20:00" style="font-weight:bold;">12th January 2017</time>
+        <time datetime="2008-02-14 20:00" style="font-weight:bold;">12th January 2017<br><small>20:00</small></time><br>
+        <span>by Matt Smith</span>
       </div>
       <div class="col-sm-8" style="border-bottom:1px solid #ccc;margin-bottom:12px">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam orci, rhoncus at sapien in,
@@ -51,7 +56,8 @@
     </div>
     <div class="row">
       <div class="col-sm-2 text-right">
-        <time datetime="2008-02-14 20:00" style="font-weight:bold;">3rd January 2017</time>
+        <time datetime="2008-02-14 20:00" style="font-weight:bold;">3rd January 2017<br><small>20:00</small></time><br>
+        <span>by Matt Smith</span>
       </div>
       <div class="col-sm-8" style="border-bottom:1px solid #ccc;margin-bottom:12px">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam orci, rhoncus at sapien in,
@@ -61,7 +67,8 @@
     </div>
     <div class="row">
       <div class="col-sm-2 text-right">
-        <time datetime="2008-02-14 20:00" style="font-weight:bold;">27th December 2016</time>
+        <time datetime="2008-02-14 20:00" style="font-weight:bold;">27th December 2016<br><small>20:00</small></time><br>
+        <span>by Matt Smith</span>
       </div>
       <div class="col-sm-8">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam orci, rhoncus at sapien in,
