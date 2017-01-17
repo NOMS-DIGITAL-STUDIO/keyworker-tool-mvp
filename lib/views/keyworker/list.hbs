@@ -5,12 +5,12 @@
 {{#if keyWorkers}}
 <ul class="media-list">
   {{#each keyWorkers as |keyworker| }}
-  <li class="media" id="{{ keyworker.keyworker_id }}">
+  <li class="media" id="{{ keyworker.staff_id }}">
     <div class="media-body">
       <h4 class="media-heading">{{ keyworker.given_name }} {{ keyworker.surname }}</h4>
       <div class="pull-right">
         <ul class="list-unstyled">
-          <li><a class="btn btn-default" href="./{{ keyworker.keyworker_id }}/assign">Assign Case</a></li>
+          <li><a class="btn btn-default" href="/keyworker/{{ keyworker.staff_id }}/assign">Assign Case</a></li>
         </ul>
       </div>
     </div>

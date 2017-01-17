@@ -1,10 +1,10 @@
-<article id="{{ casefile.casefile_id }}">
-  <h1>[{{caseFile.casefile_id}}] Case file for {{caseFile.offender.given_name}} {{caseFile.offender.surname}}</h1>
+<article id="{{ caseFile.casefile_id }}">
+  <h1><small>{{caseFile.casefile_id}}</small><br/>{{page_title}}</h1>
   <div class="row">
     <div class="col-md-2">
-      <a href="./{{ casefile.casefile_id }}" class="thumbnail">
-        <img src="{{ casefile.offender.image }}" alt="Head shot of {{ casefile.offender.given_name }} {{ casefile.offender.surname }}" style="height: 100px; width: 100px">
-      </a>
+      <div class="thumbnail">
+        <img src="{{ caseFile.offender.image }}" alt="Head shot of {{ caseFile.offender.given_name }} {{ caseFile.offender.surname }}" style="height: 100px; width: 100px">
+      </div>
     </div>
     <div class="col-md-2 pull-right">
       <ul class="list-inline">
@@ -18,7 +18,7 @@
         <li>Prison Offender Manager: unassigned</li>
       </ul>
       <ul class="list-unstyled">
-        <li><a class="btn btn-default" href="./{{ casefile.casefile_id }}/assign">Assign Staff</a></li>
+        <li><a class="btn btn-default" href="/caseFile/{{ caseFile.casefile_id }}/assign">Assign Staff</a></li>
       </ul>
     </div>
   </div>

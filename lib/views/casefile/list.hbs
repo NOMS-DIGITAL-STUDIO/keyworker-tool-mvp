@@ -7,7 +7,7 @@
   {{#each caseFiles as |casefile| }}
   <li class="media" id="{{ casefile.casefile_id }}">
     <div class="media-left">
-      <a href="./{{ casefile.casefile_id }}">
+      <a href="/casefile/{{ casefile.casefile_id }}">
         <img class="media-object" src="{{ casefile.offender.image }}" alt="Head shot of {{ casefile.offender.given_name }} {{ casefile.offender.surname }}" style="height: 100px; width: 100px">
       </a>
     </div>
@@ -25,7 +25,7 @@
       </ul>
       <div class="pull-right">
         <ul class="list-unstyled">
-          <li><a class="btn btn-default" href="./{{ casefile.casefile_id }}/assign">Assign Staff</a></li>
+          <li><a class="btn btn-default" href="/casefile/{{ casefile.casefile_id }}/assign">Assign Staff</a></li>
         </ul>
       </div>
     </div>
