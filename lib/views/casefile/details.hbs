@@ -9,16 +9,19 @@
     </div>
     <div class="col-md-2 pull-right">
       <ul class="list-inline">
-        <li><span class="label label-default" title="on IEP">IEP</span></li>
-        <li><span class="label label-default" title="on ACCT">ACCT</span></li>
-        <li><span class="label label-default" title="NPS/CRC Offedner">NPS</span></li>
-        <li><span class="label label-default" title="Vunerable Person">VP</span></li>
-        <li><span class="label label-default" title="Arsonist">A</span></li>
+        {{#each caseFile.registers as |register|}}
+        <li><abbr class="label label-default" title="{{register.label}}">{{register.abbr}}</abbr></li>
+        {{/each}}
       </ul>
     </div>
     <div class="col-md-8">
       <ul class="list-unstyled">
-        <li>Key Worker: unassigned</li>
+        <li>Key Worker: {{#if caseFile.keyworker}}
+          <a href="/keyworker/{{caseFile.keyworker.staff_id}}">{{caseFile.keyworker.given_name}} {{caseFile.keyworker.surname}}</a>
+          {{else}}
+          <span>unassigned</span>
+          {{/if}}
+        </li>
         <li>Prison Offender Manager: unassigned</li>
       </ul>
       <ul class="list-unstyled">
