@@ -13,9 +13,14 @@
       </a>
     </div>
     <div class="col-md-6">
-      <h4>{{caseFile.offender.given_name}} {{caseFile.offender.surname}}</h4>
+      <h4><a href="/casefile/{{ caseFile.casefile_id }}">{{caseFile.offender.given_name}} {{caseFile.offender.surname}}</a></h4>
       <ul class="list-unstyled">
-        <li>Key Worker: unassigned</li>
+        <li>Key Worker: {{#if caseFile.keyworker}}
+          <a href="/keyworker/{{caseFile.keyworker.staff_id}}">{{caseFile.keyworker.given_name}} {{caseFile.keyworker.surname}}</a>
+          {{else}}
+          <span>unassigned</span>
+          {{/if}}
+        </li>
         <li>Prison Offender Manager: unassigned</li>
       </ul>
       <ul class="list-inline">
