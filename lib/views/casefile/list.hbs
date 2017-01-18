@@ -1,42 +1,35 @@
 <header>
   <h1>{{ page_title }}</h1>
+  <p class="lead">You are currently responsible for {{total_caseFiles}} case files</p>
 <header>
 
+{{#if unassignedCaseFiles}}
+<div class="row">
+  <div class="col-md-3">
+    <h3>Unassigned case files</h3>
+  </div>
+  <div class="col-md-9">
+    <div class="results results-unassignedcasefiles">
+      {{#each unassignedCaseFiles as |unassignedCaseFile| }}
+      {{> caseFile unassignedCaseFile}}
+      {{/each}}
+    </div>
+  </div>
+</div>
+{{/if}}
+
 {{#if caseFiles}}
-<div class="results results-offender">
-  {{#each caseFiles as |caseFile| }}
-  <article id="{{ caseFile.casefile_id }}" class="row" style="border-bottom:1px solid #ddd;margin-bottom:11px;padding-bottom:12px;">
-    <div class="col-md-2">
-      <a href="/casefile/{{ caseFile.casefile_id }}" class="thumbnail">
-        <img src="{{ caseFile.offender.image }}" alt="Head shot of {{ caseFile.offender.given_name }} {{ caseFile.offender.surname }}">
-        <p class="text-center"><strong>{{caseFile.casefile_id}}</strong></p>
-      </a>
+<div class="row">
+  <div class="col-md-3">
+    <h3>Other case files</h3>
+  </div>
+  <div class="col-md-9">
+    <div class="results results-casefiles">
+      {{#each caseFiles as |caseFile| }}
+      {{> caseFile caseFile}}
+      {{/each}}
     </div>
-    <div class="col-md-6">
-      <h4><a href="/casefile/{{ caseFile.casefile_id }}">{{caseFile.offender.given_name}} {{caseFile.offender.surname}}</a></h4>
-      <ul class="list-unstyled">
-        <li>Key Worker: {{#if caseFile.keyworker}}
-          <a href="/keyworker/{{caseFile.keyworker.staff_id}}">{{caseFile.keyworker.given_name}} {{caseFile.keyworker.surname}}</a>
-          {{else}}
-          <span>unassigned</span>
-          {{/if}}
-        </li>
-        <li>Prison Offender Manager: unassigned</li>
-      </ul>
-      <ul class="list-inline">
-        <li><a class="btn btn-default" href="/casefile/{{ caseFile.casefile_id }}">View case file</a></li>
-        <li><a class="btn btn-primary" href="/casefile/{{ caseFile.casefile_id }}/assign">Assign staff</a></li>
-      </ul>
-    </div>
-    <div class="col-md-2">
-      <ul class="list-inline">
-        {{#each registers as |register|}}
-        <li><abbr class="label label-default" title="{{register.label}}">{{register.abbr}}</abbr></li>
-        {{/each}}
-      </ul>
-    </div>
-  </article>
-  {{/each}}
+  </div>
 </div>
 {{else}}
 <div class="alert alert-info"><strong>No offenders found:</strong> there were no new offenders located for you to assign</div>
