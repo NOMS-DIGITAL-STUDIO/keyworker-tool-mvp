@@ -1,36 +1,65 @@
-<article id="{{ caseFile.casefile_id }}">
+{{#with caseFile}}
+<article id="{{ casefile_id }}">
   <h1>{{page_title}}</h1>
   <div class="row">
     <div class="col-md-2">
       <div class="thumbnail">
-        <img src="{{ caseFile.offender.image }}" alt="Head shot of {{ caseFile.offender.given_name }} {{ caseFile.offender.surname }}">
-        <p class="text-center"><strong>{{caseFile.casefile_id}}</strong></p>
+        <img src="{{ offender.image }}" alt="Head shot of {{ offender.given_name }} {{ offender.surname }}">
+        <p class="text-center"><strong>{{casefile_id}}</strong></p>
       </div>
     </div>
-    <div class="col-md-2 pull-right">
+    <div class="col-md-6">
+      <h4><a href="/casefile/{{ casefile_id }}">{{offender.given_name}} {{offender.surname}}, {{offender.age}}, {{expand_gender offender.gender}}</a>
+        {{#if offender.aliases}}
+        <small>{{#each offender.aliases as |alias|}}{{offender.aliases}}{{/each}}</small>
+        {{/if}}
+      </h4>
+      <ul class="list-unstyled">
+        <li>Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</li>
+        <li>CSRA: Standard</li>
+        <li>Category: CAT C</li>
+      </ul>
+      <div class="well well-sm">
+        <ul class="list-unstyled" style="margin-bottom:0">
+          <li>CRO: <span>{{ offender.cro_number }}</span></li>
+          <li>NIB: <span>{{ offender.nomis_offender_id }}</span></li>
+          <li>PNC: <span>{{ offender.pnc_number }}</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4">
       <ul class="list-inline">
-        {{#each caseFile.registers as |register|}}
+        {{#each registers as |register|}}
         <li><abbr class="label label-default" title="{{register.label}}">{{register.abbr}}</abbr></li>
         {{/each}}
       </ul>
-    </div>
-    <div class="col-md-8">
       <ul class="list-unstyled">
-        <li>Key Worker: {{#if caseFile.keyworker}}
-          <a href="/keyworker/{{caseFile.keyworker.staff_id}}">{{caseFile.keyworker.given_name}} {{caseFile.keyworker.surname}}</a>
+        <li>Key Worker: {{#if keyworker}}
+          <a href="/keyworker/{{keyworker.staff_id}}">{{keyworker.given_name}} {{keyworker.surname}}</a>
           {{else}}
           <span>unassigned</span>
           {{/if}}
         </li>
-        <li>Prison Offender Manager: unassigned</li>
+        <li>POM: {{#if prisonOffenderManager}}
+          <a href="/prisonoffendermanager/{{prisonOffenderManager.staff_id}}">{{prisonOffenderManager.given_name}} {{prisonOffenderManager.surname}}</a>
+          {{else}}
+          <span>unassigned</span>
+          {{/if}}
+        </li>
+        <li>COM: {{#if communityOffenderManager}}
+          <a href="/communityoffendermanager/{{communityOffenderManager.staff_id}}">{{communityOffenderManager.given_name}} {{communityOffenderManager.surname}}</a>
+          {{else}}
+          <span>unassigned</span>
+          {{/if}}
+        </li>
       </ul>
-      <ul class="list-unstyled">
-        <li><a class="btn btn-default" href="/caseFile/{{ caseFile.casefile_id }}/assign">Assign Staff</a></li>
+      <ul class="list-inline">
+        <li><a class="btn btn-primary" href="/casefile/{{ casefile_id }}/assign">Assign staff</a></li>
       </ul>
     </div>
   </div>
   <div class="row">
-    <form method="post" action="/caseFile/{{ caseFile.casefile_id }}/record" class="form-horizontal">
+    <form method="post" action="/caseFile/{{ casefile_id }}/record" class="form-horizontal">
       <div class="form-group">
         <label class="col-sm-2 control-label">New session note</label>
         <div class="col-sm-8">
@@ -42,20 +71,19 @@
       </div>
     </form>
   </div>
-
-  <div>
-    <h2>Previous Notes</h2>
-
-    {{#each caseNotes as |caseNote|}}
-    <div class="row" style="border-bottom:1px solid #ccc;margin-bottom:12px">
-      <div class="col-sm-2 text-right">
-        <time datetime="{{caseNote.timestamp}}" style="font-weight:bold;">{{caseNote.timestamp}}<br><small>20:00</small></time><br>
-        <span>by {{caseNote.staff_id}}</span>
-      </div>
-      <div class="col-sm-8">
-        <p>{{caseNote.body}}</p>
-      </div>
-    </div>
-    {{/each}}
-  </div>
 </article>
+{{/with}}
+
+<div>
+  <h2>Previous Notes</h2>
+
+  <ul class="list-unstyled">
+    {{#each caseNotes as |caseNote|}}
+    <li style="border-bottom:1px solid #ccc;margin-bottom:12px">
+      <h4><time datetime="{{caseNote.timestamp}}" style="font-weight:bold;">{{casenote_date caseNote.timestamp}}</time><br><small>by {{caseNote.staff_id}}</small></h4>
+
+      <p>{{caseNote.body}}</p>
+    </li>
+    {{/each}}
+  </ul>
+</div>

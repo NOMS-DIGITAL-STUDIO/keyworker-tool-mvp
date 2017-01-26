@@ -5,13 +5,30 @@
       <p class="text-center"><strong>{{casefile_id}}</strong></p>
     </a>
   </div>
-  <div class="col-md-8">
-    <h4><a href="/casefile/{{ casefile_id }}">{{offender.given_name}} {{offender.surname}}, {{offender.age}}, {{offender.address.county}}</a>
+  <div class="col-md-6">
+    <h4><a href="/casefile/{{ casefile_id }}">{{offender.given_name}} {{offender.surname}}, {{offender.age}}, {{expand_gender offender.gender}}</a>
       {{#if offender.aliases}}
       <small>{{#each offender.aliases as |alias|}}{{offender.aliases}}{{/each}}</small>
       {{/if}}
     </h4>
-    <p>Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</p>
+    <ul class="list-unstyled">
+      <li>Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</li>
+      <li>CSRA Rating: Standard</li>
+      <li>Security Category: C</li>
+      <li>CRO: <span>{{ offender.cro_number }}</span></li>
+      <li>NIB: <span>{{ offender.nomis_offender_id }}</span></li>
+      <li>PNC: <span>{{ offender.pnc_number }}</span></li>
+    </ul>
+    <ul class="list-inline">
+      <li><a class="btn btn-default" href="/casefile/{{ casefile_id }}">View case file</a></li>
+    </ul>
+  </div>
+  <div class="col-md-4">
+    <ul class="list-inline">
+      {{#each registers as |register|}}
+      <li><abbr class="label label-default" title="{{register.label}}">{{register.abbr}}</abbr></li>
+      {{/each}}
+    </ul>
     <ul class="list-unstyled">
       <li>Key Worker: {{#if keyworker}}
         <a href="/keyworker/{{keyworker.staff_id}}">{{keyworker.given_name}} {{keyworker.surname}}</a>
@@ -19,13 +36,13 @@
         <span>unassigned</span>
         {{/if}}
       </li>
-      <li>Prison Offender Manager: {{#if prisonOffenderManager}}
+      <li>POM: {{#if prisonOffenderManager}}
         <a href="/prisonoffendermanager/{{prisonOffenderManager.staff_id}}">{{prisonOffenderManager.given_name}} {{prisonOffenderManager.surname}}</a>
         {{else}}
         <span>unassigned</span>
         {{/if}}
       </li>
-      <li>Community Offender Manager: {{#if communityOffenderManager}}
+      <li>COM: {{#if communityOffenderManager}}
         <a href="/communityoffendermanager/{{communityOffenderManager.staff_id}}">{{communityOffenderManager.given_name}} {{communityOffenderManager.surname}}</a>
         {{else}}
         <span>unassigned</span>
@@ -33,15 +50,7 @@
       </li>
     </ul>
     <ul class="list-inline">
-      <li><a class="btn btn-default" href="/casefile/{{ casefile_id }}">View case file</a></li>
       <li><a class="btn btn-primary" href="/casefile/{{ casefile_id }}/assign">Assign staff</a></li>
-    </ul>
-  </div>
-  <div class="col-md-2">
-    <ul class="list-inline">
-      {{#each registers as |register|}}
-      <li><abbr class="label label-default" title="{{register.label}}">{{register.abbr}}</abbr></li>
-      {{/each}}
     </ul>
   </div>
 </article>
