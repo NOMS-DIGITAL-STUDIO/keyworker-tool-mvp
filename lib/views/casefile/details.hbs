@@ -1,6 +1,11 @@
 {{#with caseFile}}
-<article id="{{ casefile_id }}">
-  <h1>{{page_title}}</h1>
+<article id="{{ casefile_id }}" style="border-bottom:1px solid #ccc;margin-bottom:12px">
+  <h1><a href="/casefile/{{ casefile_id }}">{{offender.given_name}} {{offender.surname}}, {{offender.age}}, {{expand_gender offender.gender}}</a>
+    {{#if offender.aliases}}
+    <small>{{#each offender.aliases as |alias|}}{{offender.aliases}}{{/each}}</small>
+    {{/if}}</h1>
+  <p class="lead">Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</p>
+
   <div class="row">
     <div class="col-md-2">
       <div class="thumbnail">
@@ -9,23 +14,13 @@
       </div>
     </div>
     <div class="col-md-6">
-      <h4><a href="/casefile/{{ casefile_id }}">{{offender.given_name}} {{offender.surname}}, {{offender.age}}, {{expand_gender offender.gender}}</a>
-        {{#if offender.aliases}}
-        <small>{{#each offender.aliases as |alias|}}{{offender.aliases}}{{/each}}</small>
-        {{/if}}
-      </h4>
       <ul class="list-unstyled">
-        <li>Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</li>
         <li>CSRA: Standard</li>
         <li>Category: CAT C</li>
+        <li>CRO: <span>{{ offender.cro_number }}</span></li>
+        <li>NIB: <span>{{ offender.nomis_offender_id }}</span></li>
+        <li>PNC: <span>{{ offender.pnc_number }}</span></li>
       </ul>
-      <div class="well well-sm">
-        <ul class="list-unstyled" style="margin-bottom:0">
-          <li>CRO: <span>{{ offender.cro_number }}</span></li>
-          <li>NIB: <span>{{ offender.nomis_offender_id }}</span></li>
-          <li>PNC: <span>{{ offender.pnc_number }}</span></li>
-        </ul>
-      </div>
     </div>
     <div class="col-md-4">
       <ul class="list-inline">
@@ -54,36 +49,73 @@
         </li>
       </ul>
       <ul class="list-inline">
-        <li><a class="btn btn-primary" href="/casefile/{{ casefile_id }}/assign">Assign staff</a></li>
+        <li><a id="assignStaff" href="/casefile/{{ casefile_id }}/assign#assign_staff" class="btn btn-primary" data-toggle="modal-remote" data-target="#modelStaffAssignment">Assign staff</a></li>
       </ul>
     </div>
   </div>
-  <div class="row">
-    <form method="post" action="/caseFile/{{ casefile_id }}/record" class="form-horizontal">
-      <div class="form-group">
-        <label class="col-sm-2 control-label">New session note</label>
-        <div class="col-sm-8">
-          <textarea id="note" name="note" rows="3" class="form-control"></textarea>
-        </div>
-        <div class="col-sm-2">
-          <button type="submit" class="btn btn-primary">Record note</button>
-        </div>
-      </div>
-    </form>
-  </div>
 </article>
+
+<h2>Session Notes</h2>
+
+<form method="post" action="/caseFile/{{ casefile_id }}/record" class="form-horizontal" style="border-bottom:1px solid #ccc;margin-bottom:12px">
+  <h4>Record a new Session Note</h4>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Date</label>
+    <div class="col-sm-3">
+      <input id="datetime" name="datetime" type="datetime-local" class="form-control">
+    </div>
+    <label class="col-sm-2 control-label">Session Length</label>
+    <div class="col-sm-3">
+      <select id="length" name="length" class="form-control">
+        <option>5 mins</option>
+        <option>10 mins</option>
+        <option>15 mins</option>
+        <option>30 mins</option>
+        <option>45 mins</option>
+        <option>1 hr</option>
+        <option>1.5 hrs</option>
+        <option>half day</option>
+        <option>full day</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Details</label>
+    <div class="col-sm-8">
+      <textarea id="note" name="note" rows="3" class="form-control"></textarea>
+    </div>
+    <div class="col-sm-2">
+      <button type="submit" class="btn btn-primary">Record note</button>
+    </div>
+  </div>
+</form>
 {{/with}}
 
-<div>
-  <h2>Previous Notes</h2>
+<div class="row">
+  <div class="col-sm-2">
+  <h4>Previous Session Notes</h4>
+  </div>
+  <div class="col-sm-8">
+    <ul class="list-unstyled">
+      {{#each caseNotes as |caseNote|}}
+      <li style="border-bottom:1px solid #ccc;margin-bottom:12px">
+        <h4><time datetime="{{caseNote.timestamp}}" style="font-weight:bold;">{{casenote_date caseNote.timestamp}}</time><br><small>by {{caseNote.staff_id}}</small></h4>
 
-  <ul class="list-unstyled">
-    {{#each caseNotes as |caseNote|}}
-    <li style="border-bottom:1px solid #ccc;margin-bottom:12px">
-      <h4><time datetime="{{caseNote.timestamp}}" style="font-weight:bold;">{{casenote_date caseNote.timestamp}}</time><br><small>by {{caseNote.staff_id}}</small></h4>
+        <p>{{caseNote.body}}</p>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
 
-      <p>{{caseNote.body}}</p>
-    </li>
-    {{/each}}
-  </ul>
+<div id="modelStaffAssignment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignStaff" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
 </div>
