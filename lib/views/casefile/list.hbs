@@ -1,6 +1,10 @@
 <header>
   <h1>{{ page_title }}</h1>
-  <p class="lead">You are currently responsible for {{total_caseFiles}} case files</p>
+  <p class="lead">You are currently responsible for <strong>{{total_caseFiles}}</strong> case files,
+    {{#if unassignedCaseFiles.length}}
+      <strong>{{unassignedCaseFiles.length}}</strong> need assigning.
+    {{/if}}
+  </p>
 <header>
 
 {{#if unassignedCaseFiles}}
