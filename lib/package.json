@@ -25,6 +25,7 @@
     "serve-favicon": "2.3.2"
   },
   "devDependencies": {
-    "node-sass": "^4.3.0"
+    "node-sass": "^4.3.0",
+    "thoughts": "^2.1.0"
   }
 }
