@@ -2,8 +2,6 @@
 
 script=public/main.css
 
-cd ./lib
-
 mkdir .tmp
 
 # copy sass to temp location

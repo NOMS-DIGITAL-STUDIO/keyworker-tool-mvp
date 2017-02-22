@@ -1,17 +1,14 @@
 {
-  "name": "noms-express-admin",
-  "description": "A bootstrap project for rapid experimentation using GDS admin templates",
+  "name": "noms-key-worker-prototype",
+  "description": "A prototype for the NOMS key worker tool",
   "version": "0.0.1",
   "private": true,
   "author": "Matt Smith <mattonfoot@gmail.com> (http://about.me/mattonfoot)",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "./bin/www"
   },
   "main": "./bin/www",
-  "dev-dependencies": {
-    "bower": ">=1.8.0"
-  },
   "dependencies": {
     "body-parser": "1.15.2",
     "cookie-parser": "1.4.3",
@@ -25,6 +22,7 @@
     "serve-favicon": "2.3.2"
   },
   "devDependencies": {
+    "bower": ">=1.8.0",
     "node-sass": "^4.3.0",
     "thoughts": "^2.1.0"
   }

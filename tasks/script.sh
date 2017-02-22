@@ -2,8 +2,6 @@
 
 script=./public/main.js
 
-cd ./lib
-
 # move scripts and concat where needed
 cp ./bower_components/jquery/dist/jquery.min.js ./public/jquery.js
 # cp ./bower_components/jquery-ujs ./public/jquery-ujs.js
