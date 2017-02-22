@@ -47,7 +47,7 @@ const onListening = (server) => () => {
 };
 
 // environment variables
-var port = normalizePort(process.env.NETWORK_PORT || '3000');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 app.locals.env = process.env;
