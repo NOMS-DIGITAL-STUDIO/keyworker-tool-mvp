@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-md-2">
       <div class="thumbnail">
-        <img src="{{ offender.image }}" alt="Head shot of {{ offender.given_name }} {{ offender.surname }}">
+        <img src="/images/placeholder.png" alt="Head shot of {{ offender.given_name }} {{ offender.surname }}">
         <p class="text-center"><strong>{{casefile_id}}</strong></p>
       </div>
     </div>
@@ -62,7 +62,7 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">Date</label>
     <div class="col-sm-3">
-      <input id="datetime" name="datetime" type="datetime-local" class="form-control">
+      <input id="datetime" name="datetime" type="datetime" value="{{date_input_value now}}" class="form-control">
     </div>
     <label class="col-sm-2 control-label">Session Length</label>
     <div class="col-sm-3">

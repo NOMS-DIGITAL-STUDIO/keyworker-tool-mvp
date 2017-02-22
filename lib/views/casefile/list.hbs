@@ -15,7 +15,7 @@
   <div class="col-md-9">
     <div class="results results-unassignedcasefiles">
       {{#each unassignedCaseFiles as |unassignedCaseFile| }}
-      {{> caseFile unassignedCaseFile}}
+      {{> caseFileListEntry unassignedCaseFile}}
       {{/each}}
     </div>
   </div>
@@ -27,12 +27,12 @@
 {{#if caseFiles}}
 <div class="row">
   <div class="col-md-3">
-    <h3>Other case files</h3>
+    <h3>Assigned case files</h3>
   </div>
   <div class="col-md-9">
     <div class="results results-casefiles">
       {{#each caseFiles as |caseFile| }}
-      {{> caseFile caseFile}}
+      {{> caseFileListEntry caseFile}}
       {{/each}}
     </div>
   </div>

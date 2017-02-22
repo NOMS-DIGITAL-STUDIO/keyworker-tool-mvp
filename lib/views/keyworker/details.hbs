@@ -18,7 +18,7 @@
     {{#if keyWorker.caseFiles}}
       <div class="results results-offender">
         {{#each keyWorker.caseFiles as |caseFile| }}
-        {{> caseFile caseFile}}
+        {{> caseFileListEntry caseFile}}
         {{/each}}
       </div>
     {{else}}
