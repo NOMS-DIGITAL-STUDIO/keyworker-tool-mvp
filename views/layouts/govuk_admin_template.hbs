@@ -31,7 +31,8 @@
       // that rules and styles can be correctly calculated.
     --}}
     <!--[if lte IE 8]>
-      {{javascript_include "lte-ie8" }}
+      {{javascript_include "html5" }}
+      {{javascript_include "respond.min" }}
     <![endif]-->
   </head>
   <body{{#if environment_style}} class="environment-{{ environment_style }}"{{/if}}>
