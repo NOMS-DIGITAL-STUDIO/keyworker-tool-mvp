@@ -1,6 +1,6 @@
 {
-  "name": "noms-key-worker-prototype",
-  "description": "A prototype for the NOMS key worker tool",
+  "name": "keyworker-tool-mvp",
+  "description": "A MVP for the NOMS Key Worker tool",
   "version": "0.0.1",
   "private": true,
   "author": "Matt Smith <mattonfoot@gmail.com> (http://about.me/mattonfoot)",
