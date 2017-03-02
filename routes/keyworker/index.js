@@ -10,8 +10,8 @@ const inspect = (x) => {
 const raw = (res, model) => () => res.send(model);
 const rendered = (res, view, model) => () => res.render(view, model);
 const format = (res, view) => (model) => res.format({
-  json: raw(res, model),
   html: rendered(res, view, model),
+  json: raw(res, model),
 });
 const renderKeyWorkerList = (res) => format(res, 'keyworker/list');
 const renderKeyWorkerDetails = (res) => format(res, 'keyworker/details');
