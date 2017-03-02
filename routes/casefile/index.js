@@ -11,8 +11,8 @@ const inspect = (x) => {
 const render = (res, view) => (model) => res.render(view, model);
 const send = (res) => (model) => res.send(model);
 const format = (res, view) => (model) => res.format({
-  json: () => send(res)(model),
   html: () => render(res, view)(model),
+  json: () => send(res)(model),
 });
 const renderCaseFileList = (res) => format(res, 'casefile/list');
 const renderCaseFileDetails = (res) => format(res, 'casefile/details');
