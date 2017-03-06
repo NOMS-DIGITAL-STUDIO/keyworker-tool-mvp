@@ -15,6 +15,7 @@ const format = (res, view) => (model) => res.format({
 });
 const renderKeyWorkerList = (res) => format(res, 'keyworker/list');
 const renderKeyWorkerDetails = (res) => format(res, 'keyworker/details');
+const renderKeyWorkerEditor = (res) => format(res, 'keyworker/edit');
 
 const redirect = (res, route) => () => res.redirect(route);
 
@@ -49,6 +50,9 @@ const getKeyWorkerList = () =>
 const getKeyWorkerDetails = (id) =>
   router.keyWorker.getKeyWorker(id);
 
+const modifyKeyWorkerDetails = (x) =>
+  router.keyWorker.modifyKeyWorker(x);
+
 const createKeyWorkerListViewModel = (req) => (keyWorkers) =>
   req.app.locals.GovukAdminTemplate.create({
     page_title: 'Your Staff',
@@ -62,6 +66,30 @@ const createKeyWorkerDetailsViewModel = (req) => (keyWorker) =>
     keyWorker: keyWorker,
   });
 
+const createKeyWorkerEditorViewModel = (req) => (keyWorker) =>
+  req.app.locals.GovukAdminTemplate.create({
+    page_title: 'My Details',
+    keyWorker: keyWorker,
+  });
+
+const createKeyWorkerUpdate = (req) => (keyWorker) => {
+  var x = req.body;
+  var update = {
+    staff_id: keyWorker.staff_id,
+  };
+  if (x.gender !== keyWorker.gender) update.gender = x.gender;
+  if (x.date_of_birth !== keyWorker.date_of_birth) update.date_of_birth = x.date_of_birth;
+  if (x.employment_status !== keyWorker.employment_status) update.employment_status = x.employment_status;
+  if (x.given_name !== keyWorker.given_name) update.given_name = x.given_name;
+  if (x.middle_names !== keyWorker.middle_names) update.middle_names = x.middle_names;
+  if (x.surname !== keyWorker.surname) update.surname = x.surname;
+  if (x.contact_number !== keyWorker.contact_number) update.contact_number = x.contact_number;
+  if (x.contact_email !== keyWorker.contact_email) update.contact_email = x.contact_email;
+  if (x.working_hours !== keyWorker.working_hours) update.working_hours = x.working_hours;
+
+  return update;
+};
+
 const listKeyWorkers = (req, res, next) =>
   getKeyWorkerList()
     .then(createKeyWorkerListViewModel(req))
@@ -72,6 +100,19 @@ const displayKeyWorkerDetails = (req, res, next) =>
   getKeyWorkerDetails(req.params.sid)
     .then(createKeyWorkerDetailsViewModel(req))
     .then(renderKeyWorkerDetails(res))
+    .catch(failWithError(res, next));
+
+const displayKeyWorkerEditor = (req, res, next) =>
+  getKeyWorkerDetails(req.params.sid)
+    .then(createKeyWorkerEditorViewModel(req))
+    .then(renderKeyWorkerEditor(res))
+    .catch(failWithError(res, next));
+
+const updateKeyWorkerDetails = (req, res, next) =>
+  getKeyWorkerDetails(req.params.sid)
+    .then(createKeyWorkerUpdate(req))
+    .then(modifyKeyWorkerDetails)
+    .then(redirect(res, './'))
     .catch(failWithError(res, next));
 
 // middleware
@@ -85,8 +126,8 @@ router.use(setup);
 
 router.get('/', listKeyWorkers);
 router.get('/:sid', displayKeyWorkerDetails);
-router.get('/:sid/assign', (req, res) => res.redirect(req.baseUrl));
-router.post('/:sid/assign', (req, res) => res.redirect('../'));
+router.post('/:sid', updateKeyWorkerDetails);
+router.get('/:sid/edit', displayKeyWorkerEditor);
 
 // exports
 

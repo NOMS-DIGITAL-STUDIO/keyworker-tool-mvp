@@ -28,4 +28,10 @@ Helpers.date_input_value = (datetime) =>
 Helpers.expand_gender = (x) =>
   new Handlebars.SafeString(x === 'F' ? 'Female' : 'Male');
 
+Helpers.option_selected = (value, x) =>
+  new Handlebars.SafeString(x === value ? 'selected' : '');
+
+Helpers.option_checked = (value, x) =>
+  new Handlebars.SafeString(x === value ? 'checked' : '');
+
 module.exports = Helpers;

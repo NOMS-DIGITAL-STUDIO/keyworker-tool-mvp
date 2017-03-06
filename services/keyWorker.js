@@ -31,7 +31,7 @@ const getRandomTelephoneNumber = () =>
   '01' + ('00' + randomInt(99)).substr(-2) + ('000' + randomInt(999)).substr(-3) + ('0000' + randomInt(9999)).substr(-4);
 
 const putKeyWorker = (x) => {
-  var out = keyWorkers[x.staff_id] = {
+  var out = keyWorkers[x.staff_id] = keyWorkers[x.staff_id] || {
     staff_id: x.staff_id,
     position: 'Key Worker',
     caseFiles: [],
@@ -60,6 +60,12 @@ const putKeyWorker = (x) => {
 
   return keyWorkers[x.staff_id];
 }
+
+const getKeyWorkers = () =>
+  new Promise((res, rej) => res(keyWorkers));
+
+const getKeyWorker = (id) =>
+  getKeyWorkers().then(filterById(id));
 
 const postKeyWorker = (x) =>
   putKeyWorker({
@@ -94,9 +100,6 @@ const generate = (max) => {
   }
 };
 
-const getKeyWorkers = () =>
-  new Promise((res, rej) => res(keyWorkers));
-
 // initialize
 generate(10);
 
@@ -104,7 +107,10 @@ module.exports.listKeyWorkers = () =>
   getKeyWorkers().then(objToList);
 
 module.exports.getKeyWorker = (id) =>
-  getKeyWorkers().then(filterById(id));
+  getKeyWorker(id);
 
 module.exports.registerKeyWorker = (x) =>
   postKeyWorker(x);
+
+module.exports.modifyKeyWorker = (x) =>
+  putKeyWorker(x);

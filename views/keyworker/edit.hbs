@@ -1,0 +1,91 @@
+<article id="{{ keyWorker.staff_id }}">
+  <header>
+    <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}</h1>
+    <p class="lead">Edit details</p>
+  <header>
+</article>
+
+<form method="post" action="./">
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Personal details</h3>
+    </div>
+    <div class="col-md-9">
+      <input type="hidden" name="staff_id" value="{{keyWorker.staff_id}}">
+
+      <div class="form-group">
+        <label for="given_name">Given name</label>
+        <input type="text" class="form-control" id="given_name" name="given_name" value="{{keyWorker.given_name}}" placeholder="Given name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="middle_names">Middle names</label>
+        <input type="text" class="form-control" id="middle_names" name="middle_names" value="{{keyWorker.middle_names}}" placeholder="Middle names (Syntax: [name_1, name_2, ..., name_N])">
+      </div>
+
+      <div class="form-group">
+        <label for="surname">Surname</label>
+        <input type="text" class="form-control" id="surname" name="surname" value="{{keyWorker.surname}}" placeholder="Surname" required>
+      </div>
+
+      <div class="form-group">
+        <label for="date_of_birth">D.O.B.</label>
+        <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="{{date_input_value keyWorker.date_of_birth}}" placeholder="Date of Birth" required>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <div class="radio">
+          <label><input type="radio" name="gender" id="gender_male" value="M" {{option_checked "M" keyWorker.gender}} required> Male</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="gender" id="gender_female" value="F" {{option_checked "F" keyWorker.gender}} required> Female</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="gender" id="gender_unspecified" value="U" {{option_checked "U" keyWorker.gender}} required> Unspecified</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Employment</h3>
+    </div>
+    <div class="col-md-9">
+      <div class="form-group">
+        <label for="employment_status">Employment status {{keyWorker.employment_status}}</label>
+        <div class="radio">
+          <label><input type="radio" name="employment_status" id="employment_status_fulltime" value="Full time" {{option_checked "Full time" keyWorker.employment_status}} required> Full time</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="employment_status" id="employment_status_parttime" value="Part time" {{option_checked "Part time" keyWorker.employment_status}} required> Part time</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="working_hours">Working hours</label>
+        <input type="text" class="form-control" id="working_hours" name="working_hours" value="{{keyWorker.working_hours}}" placeholder="Working hours" required>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Contact Details</h3>
+    </div>
+    <div class="col-md-9">
+      <div class="form-group">
+        <label for="contact_email">Contact email address</label>
+        <input type="email" class="form-control" id="contact_email" name="contact_email" value="{{keyWorker.contact_email}}" placeholder="Contact email address" required>
+      </div>
+
+      <div class="form-group">
+        <label for="contact_number">Contact telephone number</label>
+        <input type="tel" class="form-control" id="contact_number" name="contact_number" value="{{keyWorker.contact_number}}" placeholder="Contact telephone number" required>
+      </div>
+
+      <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+  </div>
+</form>

@@ -1,6 +1,8 @@
 <article id="{{ keyWorker.staff_id }}">
   <header>
-    <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}</h1>
+
+    <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}
+      <small><a class="btn btn-link" href="/keyWorker/{{ keyWorker.staff_id }}/edit">Edit details</a></small></h1>
     <p class="lead">Currently responsible for <span title="{{keyWorker.caseFiles.length}} case files assigned">{{keyWorker.caseFiles.length}}</span> case files</p>
   <header>
 </article>
