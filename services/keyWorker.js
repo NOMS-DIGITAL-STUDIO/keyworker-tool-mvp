@@ -27,6 +27,9 @@ const filterById = (id) => (arr) => arr[id];
 const getNextKeyWorkerId = () =>
   ('0000' + keyWorker_count).substr(-4);
 
+const getRandomTelephoneNumber = () =>
+  '01' + ('00' + randomInt(99)).substr(-2) + ('000' + randomInt(999)).substr(-3) + ('0000' + randomInt(9999)).substr(-4);
+
 const putKeyWorker = (x) => {
   var out = keyWorkers[x.staff_id] = {
     staff_id: x.staff_id,
@@ -43,6 +46,10 @@ const putKeyWorker = (x) => {
   if (x.given_name) out.given_name = x.given_name;
   if (x.middle_names) out.middle_names = x.middle_names;
   if (x.surname) out.surname = x.surname;
+
+  if (x.contact_number) out.contact_number = x.contact_number;
+  if (x.contact_email) out.contact_email = x.contact_email;
+  if (x.working_hours) out.working_hours = x.working_hours;
 
   out.full_name = (((x.given_name) ? x.given_name + ' ' : '') +
                    ((x.middle_names) ? x.middle_names + ' ' : '') +
@@ -63,6 +70,9 @@ const postKeyWorker = (x) =>
     given_name: x.given_name,
     middle_names: x.middle_names,
     surname: x.surname,
+    contact_number: x.contact_number,
+    contact_email: x.contact_email,
+    working_hours: x.working_hours,
   });
 
 const generate = (max) => {
@@ -77,6 +87,9 @@ const generate = (max) => {
       given_name: given_names[randomInt(given_names.length) - 1],
       middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
       surname: surnames[randomInt(surnames.length) - 1],
+      contact_number: getRandomTelephoneNumber(),
+      contact_email: 'test@example.com',
+      working_hours: 'Monday to Friday, 9 til 5',
     });
   }
 };
