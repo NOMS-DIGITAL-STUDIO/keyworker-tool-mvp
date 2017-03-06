@@ -58,7 +58,7 @@ const createKeyWorkerListViewModel = (req) => (keyWorkers) =>
 
 const createKeyWorkerDetailsViewModel = (req) => (keyWorker) =>
   req.app.locals.GovukAdminTemplate.create({
-    page_title: keyWorker.given_name + ' ' + keyWorker.surname,
+    page_title: 'My Caseload',
     keyWorker: keyWorker,
   });
 
