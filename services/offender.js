@@ -41,6 +41,11 @@ const putOffender = (x) => {
   if (x.surname) out.surname = x.surname;
   if (x.date_of_birth) out.date_of_birth = x.date_of_birth;
 
+  out.full_name = (((x.given_name) ? x.given_name + ' ' : '') +
+                   ((x.middle_names) ? x.middle_names + ' ' : '') +
+                   ((x.surname) ? x.surname + ' ' : '')
+                  ).trim();
+
   offender_count++;
 
   return offenders[x.offender_id];
@@ -62,8 +67,6 @@ const postOffender = (x) =>
   });
 
 const generate = (max) => {
-  var out = offenders;
-
   for (var i = offender_count; i <= max; ++i) {
     var id = getNextOffenderId();
     putOffender({
@@ -80,8 +83,6 @@ const generate = (max) => {
       date_of_birth: (2017 - randomInt(55)) + '-' + (13 - randomInt(12)) + '-' + (29 - randomInt(28)),
     });
   }
-
-  return out;
 };
 
 const getOffenders = () =>
