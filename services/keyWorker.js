@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const male_given_names = [ 'Matt', 'Thomas', 'William', 'Howard', 'Ross', 'Stephen', 'Nick', 'David', 'Robert', 'James', 'Gary', 'Phillip' ];
 const female_given_names = [ 'Jane', 'Mary', 'Elizabeth', 'Louise', 'Stacy', 'Anne', 'Claire', 'Helen' ];
 const surnames = [ 'Smith', 'Holloway', 'Jones', 'Harrison', 'Lennon', 'Hill', 'Black', 'Newton', 'Homer' ];
@@ -33,6 +35,10 @@ const putKeyWorker = (x) => {
   };
 
   if (x.gender) out.gender = x.gender;
+  if (x.date_of_birth) {
+    out.date_of_birth = x.date_of_birth;
+    out.age = moment(x.date_of_birth).toNow(true);
+  }
   if (x.given_name) out.given_name = x.given_name;
   if (x.middle_names) out.middle_names = x.middle_names;
   if (x.surname) out.surname = x.surname;
@@ -51,6 +57,7 @@ const postKeyWorker = (x) =>
   putKeyWorker({
     staff_id: 'sid' + getNextKeyWorkerId(),
     gender: x.gender,
+    date_of_birth: x.date_of_birth,
     given_name: x.given_name,
     middle_names: x.middle_names,
     surname: x.surname,
@@ -62,6 +69,7 @@ const generate = (max) => {
     var given_names = (gender === "M" ? male_given_names : female_given_names);
     postKeyWorker({
       gender: gender,
+      date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
       given_name: given_names[randomInt(given_names.length) - 1],
       middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
       surname: surnames[randomInt(surnames.length) - 1],

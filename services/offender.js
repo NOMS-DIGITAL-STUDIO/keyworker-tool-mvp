@@ -1,3 +1,4 @@
+const moment = require('moment');
 
 const given_names = [ 'Matt', 'Thomas', 'William', 'Howard', 'Ross', 'Stephen', 'Nick', 'David', 'Robert', 'James', 'Gary', 'Phillip' ];
 const surnames = [ 'Smith', 'Holloway', 'Jones', 'Harrison', 'Lennon', 'Hill', 'Black', 'Newton', 'Homer' ];
@@ -34,12 +35,15 @@ const putOffender = (x) => {
   if (x.pnc_number) out.pnc_number = x.pnc_number;
   if (x.cro_number) out.cro_number = x.cro_number;
   if (x.gender) out.gender = x.gender;
+  if (x.date_of_birth) {
+    out.date_of_birth = x.date_of_birth;
+    out.age = moment(x.date_of_birth).toNow(true);
+  }
   if (x.age) out.age = x.age;
   if (x.image) out.image = x.image;
   if (x.given_name) out.given_name = x.given_name;
   if (x.middle_names) out.middle_names = x.middle_names;
   if (x.surname) out.surname = x.surname;
-  if (x.date_of_birth) out.date_of_birth = x.date_of_birth;
 
   out.full_name = (((x.given_name) ? x.given_name + ' ' : '') +
                    ((x.middle_names) ? x.middle_names + ' ' : '') +
@@ -58,12 +62,11 @@ const postOffender = (x) =>
     pnc_number: x.pnc_number,
     cro_number: x.cro_number,
     gender: x.gender,
-    age: x.age,
+    date_of_birth: x.date_of_birth,
     image: x.image,
     given_name: x.given_name,
     middle_names: x.middle_names,
     surname: x.surname,
-    date_of_birth: x.date_of_birth,
   });
 
 const generate = (max) => {
@@ -75,12 +78,11 @@ const generate = (max) => {
       pnc_number: 'pnc' + id,
       cro_number: 'cro' + id,
       gender: 'M',
-      age: randomInt(55) + 18,
+      date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
       image: 'http://placehold.it/150x150',
       given_name: given_names[randomInt(given_names.length) - 1],
       middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
       surname: surnames[randomInt(surnames.length) - 1],
-      date_of_birth: (2017 - randomInt(55)) + '-' + (13 - randomInt(12)) + '-' + (29 - randomInt(28)),
     });
   }
 };
