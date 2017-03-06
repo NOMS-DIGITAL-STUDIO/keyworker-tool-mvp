@@ -39,6 +39,7 @@ const putKeyWorker = (x) => {
     out.date_of_birth = x.date_of_birth;
     out.age = moment(x.date_of_birth).toNow(true);
   }
+  if (x.employment_status) out.employment_status = x.employment_status;
   if (x.given_name) out.given_name = x.given_name;
   if (x.middle_names) out.middle_names = x.middle_names;
   if (x.surname) out.surname = x.surname;
@@ -58,6 +59,7 @@ const postKeyWorker = (x) =>
     staff_id: 'sid' + getNextKeyWorkerId(),
     gender: x.gender,
     date_of_birth: x.date_of_birth,
+    employment_status: x.employment_status,
     given_name: x.given_name,
     middle_names: x.middle_names,
     surname: x.surname,
@@ -66,10 +68,12 @@ const postKeyWorker = (x) =>
 const generate = (max) => {
   for (var i = keyWorker_count; i <= max; ++i) {
     var gender = randomInt(20) === 20 ? "F" : "M";
+    var employment_status = randomInt(10) === 10 ? "Part time" : "Full time";
     var given_names = (gender === "M" ? male_given_names : female_given_names);
     postKeyWorker({
       gender: gender,
       date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
+      employment_status: employment_status,
       given_name: given_names[randomInt(given_names.length) - 1],
       middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
       surname: surnames[randomInt(surnames.length) - 1],
