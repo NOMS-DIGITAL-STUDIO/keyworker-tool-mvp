@@ -16,6 +16,8 @@ const format = (res, view) => (model) => res.format({
 const renderKeyWorkerList = (res) => format(res, 'keyworker/list');
 const renderKeyWorkerDetails = (res) => format(res, 'keyworker/details');
 const renderKeyWorkerEditor = (res) => format(res, 'keyworker/edit');
+const renderKeyWorkerCaseload = (res) => format(res, 'keyworker/caseload');
+
 
 const redirect = (res, route) => () => res.redirect(route);
 
@@ -50,6 +52,10 @@ const getKeyWorkerList = () =>
 const getKeyWorkerDetails = (id) =>
   router.keyWorker.getKeyWorker(id);
 
+// TODO: seperate caseload request from keyworker request
+const getKeyWorkerCaseload = (id) =>
+  router.keyWorker.getKeyWorker(id);
+
 const modifyKeyWorkerDetails = (x) =>
   router.keyWorker.modifyKeyWorker(x);
 
@@ -62,13 +68,13 @@ const createKeyWorkerListViewModel = (req) => (keyWorkers) =>
 
 const createKeyWorkerDetailsViewModel = (req) => (keyWorker) =>
   req.app.locals.GovukAdminTemplate.create({
-    page_title: 'My Caseload',
+    page_title: 'My Details',
     keyWorker: keyWorker,
   });
 
 const createKeyWorkerEditorViewModel = (req) => (keyWorker) =>
   req.app.locals.GovukAdminTemplate.create({
-    page_title: 'My Details',
+    page_title: 'Edit my Details',
     keyWorker: keyWorker,
   });
 
@@ -89,6 +95,12 @@ const createKeyWorkerUpdate = (req) => (keyWorker) => {
 
   return update;
 };
+
+const createKeyWorkerCaseloadViewModel = (req) => (keyWorker) =>
+req.app.locals.GovukAdminTemplate.create({
+  page_title: 'My Caseload',
+  keyWorker: keyWorker,
+});
 
 const listKeyWorkers = (req, res, next) =>
   getKeyWorkerList()
@@ -115,6 +127,12 @@ const updateKeyWorkerDetails = (req, res, next) =>
     .then(redirect(res, './'))
     .catch(failWithError(res, next));
 
+const displayKeyWorkerCaseload = (req, res, next) =>
+  getKeyWorkerCaseload(req.params.sid)
+    .then(createKeyWorkerCaseloadViewModel(req))
+    .then(renderKeyWorkerCaseload(res))
+    .catch(failWithError(res, next));
+
 // middleware
 
 const setup = (req, res, next) =>
@@ -126,8 +144,9 @@ router.use(setup);
 
 router.get('/', listKeyWorkers);
 router.get('/:sid', displayKeyWorkerDetails);
-router.post('/:sid', updateKeyWorkerDetails);
 router.get('/:sid/edit', displayKeyWorkerEditor);
+router.post('/:sid', updateKeyWorkerDetails);
+router.get('/:sid/caseload', displayKeyWorkerCaseload);
 
 // exports
 

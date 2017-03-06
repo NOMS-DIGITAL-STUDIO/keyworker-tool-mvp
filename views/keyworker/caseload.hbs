@@ -1,0 +1,30 @@
+<article id="{{ keyWorker.staff_id }}">
+  <header>
+
+    <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}
+      <small><a class="btn btn-link" href="/keyWorker/{{ keyWorker.staff_id }}">View details</a></small></h1>
+    <p class="lead">Currently responsible for <span title="{{keyWorker.caseFiles.length}} case files assigned">{{keyWorker.caseFiles.length}}</span> case files</p>
+  <header>
+</article>
+
+<div class="row">
+  <div class="col-md-3">
+    <h3>Assigned case files</h3>
+    {{!--
+    <ul class="list-inline">
+      <li><a class="btn btn-default" href="/keyWorker/{{ keyWorker.staff_id }}/assign">Assign Case</a></li>
+    </ul>
+    --}}
+  </div>
+  <div class="col-md-9">
+    {{#if keyWorker.caseFiles}}
+      <div class="results results-offender">
+        {{#each keyWorker.caseFiles as |caseFile| }}
+        {{> caseFileListEntry caseFile}}
+        {{/each}}
+      </div>
+    {{else}}
+    <div class="alert alert-info"><strong>No case files assigned:</strong> This member of staff currently has no case files assigned to them</div>
+    {{/if}}
+  </div>
+</div>

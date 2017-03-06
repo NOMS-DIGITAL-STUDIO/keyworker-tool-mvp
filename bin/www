@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-var app =   require('../app');
-var debug = require('debug')('express-mulitchain-node:server');
-var http =  require('http');
+var pkg = require('../package.json');
+var app = require('../app');
+var debug = require('debug')(pkg.name + ':server');
+var http = require('http');
 
 const normalizePort = (val) => {
   var port = parseInt(val, 10);
@@ -44,6 +45,7 @@ const onListening = (server) => () => {
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
 
   debug('Debugger listening on ' + bind);
+  console.log('Server listening on ' + bind);
 };
 
 // environment variables

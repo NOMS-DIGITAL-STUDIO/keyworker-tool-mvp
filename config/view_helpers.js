@@ -1,37 +1,35 @@
 var Handlebars = require('handlebars');
 var moment = require('moment');
 
+// helpers
+
+const safeString = (s) => new Handlebars.SafeString(s);
+const escapedExpression = (e) => Handlebars.escapeExpression(e);
+const safeDateString = (datetime, format) => safeString(moment(datetime).format(format));
+
+// public
+
 const Helpers = {};
 
-Helpers.link_to = (label, href, className) =>
-  new Handlebars.SafeString('<a href="' + Handlebars.escapeExpression(href) + '" class="' + className + '">'+ label +'</a>');
+Helpers.href_to = (href) => safeString(escapedExpression(href));
+Helpers.link_to = (label, href, className) => safeString('<a href="' + escapedExpression(href) + '" class="' + className + '">'+ label +'</a>');
+Helpers.javascript_include = (src) => safeString('<script src="/' + escapedExpression(src) + '.js"></script>');
+Helpers.stylesheet_link = (href) => safeString('<link href="/' + escapedExpression(href) + '.css" rel="stylesheet" media="screen">');
 
-Helpers.href_to = (href) =>
-  new Handlebars.SafeString(Handlebars.escapeExpression(href));
+Helpers.sentence_date = (datetime) => safeDateString(datetime, 'MMM YY');
+Helpers.casenote_date = (datetime) => safeDateString(datetime, 'MMMM Do YYYY, h:mma');
+Helpers.date_input_value = (datetime) => safeDateString(datetime, 'YYYY-MM-DD HH:mm');
+Helpers.profile_dob = (datetime) => safeDateString(datetime, 'DD MMM YY');
 
-Helpers.javascript_include = (src) =>
-  new Handlebars.SafeString('<script src="/' + Handlebars.escapeExpression(src) + '.js"></script>');
+Helpers.expand_gender = (x) => {
+  switch (x) {
+    case 'M': return safeString('Male');
+    case 'F': return safeString('Female');
+    default: return safeString('Unspecified');
+  }
+};
 
-Helpers.stylesheet_link = (href) =>
-  new Handlebars.SafeString('<link href="/' + Handlebars.escapeExpression(href) + '.css" rel="stylesheet" media="screen">');
-  // new Handlebars.SafeString('');
-
-Helpers.sentence_date = (datetime) =>
-  new Handlebars.SafeString(moment(datetime).format('MMM YY'));
-
-Helpers.casenote_date = (datetime) =>
-  new Handlebars.SafeString(moment(datetime).format('MMMM Do YYYY, h:mma'));
-
-Helpers.date_input_value = (datetime) =>
-  new Handlebars.SafeString(moment(datetime).format('YYYY-MM-DD HH:mm'));
-
-Helpers.expand_gender = (x) =>
-  new Handlebars.SafeString(x === 'F' ? 'Female' : 'Male');
-
-Helpers.option_selected = (value, x) =>
-  new Handlebars.SafeString(x === value ? 'selected' : '');
-
-Helpers.option_checked = (value, x) =>
-  new Handlebars.SafeString(x === value ? 'checked' : '');
+Helpers.option_selected = (value, x) => safeString(x === value ? 'selected' : '');
+Helpers.option_checked = (value, x) => safeString(x === value ? 'checked' : '');
 
 module.exports = Helpers;

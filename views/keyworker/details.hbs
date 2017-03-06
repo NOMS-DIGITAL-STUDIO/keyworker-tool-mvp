@@ -1,30 +1,77 @@
 <article id="{{ keyWorker.staff_id }}">
   <header>
-
     <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}
       <small><a class="btn btn-link" href="/keyWorker/{{ keyWorker.staff_id }}/edit">Edit details</a></small></h1>
-    <p class="lead">Currently responsible for <span title="{{keyWorker.caseFiles.length}} case files assigned">{{keyWorker.caseFiles.length}}</span> case files</p>
+    <p class="lead">{{ page_title }}</p>
   <header>
 </article>
 
-<div class="row">
-  <div class="col-md-3">
-    <h3>Assigned case files</h3>
-    {{!--
-    <ul class="list-inline">
-      <li><a class="btn btn-default" href="/keyWorker/{{ keyWorker.staff_id }}/assign">Assign Case</a></li>
-    </ul>
-    --}}
-  </div>
-  <div class="col-md-9">
-    {{#if keyWorker.caseFiles}}
-      <div class="results results-offender">
-        {{#each keyWorker.caseFiles as |caseFile| }}
-        {{> caseFileListEntry caseFile}}
-        {{/each}}
+<form method="post" action="./">
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Personal details</h3>
+    </div>
+    <div class="col-md-9">
+      <input type="hidden" name="staff_id" value="{{keyWorker.staff_id}}">
+
+      <div class="form-group">
+        <label for="given_name">Given name</label>
+        <p class="form-control-static">{{keyWorker.given_name}}</p>
       </div>
-    {{else}}
-    <div class="alert alert-info"><strong>No case files assigned:</strong> This member of staff currently has no case files assigned to them</div>
-    {{/if}}
+
+      <div class="form-group">
+        <label for="middle_names">Middle names</label>
+        <p class="form-control-static">{{keyWorker.middle_names}}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="surname">Surname</label>
+        <p class="form-control-static">{{keyWorker.surname}}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="date_of_birth">D.O.B.</label>
+        <p class="form-control-static">{{profile_dob keyWorker.date_of_birth}}, {{keyWorker.age}}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <p class="form-control-static">{{expand_gender keyWorker.gender}}</p>
+      </div>
+    </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Employment</h3>
+    </div>
+    <div class="col-md-9">
+      <div class="form-group">
+        <label for="employment_status">Employment status</label>
+        <p class="form-control-static">{{expand_gender keyWorker.employment_status}}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="working_hours">Working hours</label>
+        <p class="form-control-static">{{keyWorker.working_hours}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Contact Details</h3>
+    </div>
+    <div class="col-md-9">
+      <div class="form-group">
+        <label for="contact_email">Contact email address</label>
+        <p class="form-control-static">{{keyWorker.contact_email}}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="contact_number">Contact telephone number</label>
+        <p class="form-control-static">{{keyWorker.contact_number}}</p>
+      </div>
+    </div>
+  </div>
+</form>

@@ -9,10 +9,10 @@
     <article id="{{ keyworker.staff_id }}" style="border-bottom:1px solid #ddd;margin-bottom:11px;padding-bottom:12px;">
       <div class="row">
         <div class="col-md-10">
-          <h4><a href="/keyworker/{{ keyworker.staff_id }}">{{ keyworker.given_name }} {{ keyworker.surname }}, {{keyworker.age}}, {{expand_gender keyworker.gender}}</a></h4>
+          <h4>{{ keyworker.given_name }} {{ keyworker.surname }}, {{keyworker.age}}, {{expand_gender keyworker.gender}}</h4>
           <ul class="list-inline">
-            <li><a class="btn btn-default" href="/keyworker/{{ keyworker.staff_id }}">View case assignments</a></li>
-            {{!--<li><a class="btn btn-default" href="/keyworker/{{ keyworker.staff_id }}/assign">Assign Case</a></li>--}}
+            <li><a class="btn btn-default" href="/keyworker/{{ keyworker.staff_id }}/caseload">View case assignments</a></li>
+            <li><a class="btn btn-default" href="/keyworker/{{ keyworker.staff_id }}">View details</a></li>
           </ul>
         </div>
         <div class="col-md-2">
