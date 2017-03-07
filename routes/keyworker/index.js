@@ -59,11 +59,13 @@ const getKeyWorkerCaseload = (id) =>
 const modifyKeyWorkerDetails = (x) =>
   router.keyWorker.modifyKeyWorker(x);
 
+const includePersonalCaseloadCapacityCheck = (x) => {
+  x.caseload_capacity_over = (x.caseFiles && x.caseFiles.length > x.caseload_capacity);
+  return x;
+};
+
 const includeCaseloadCapacityCheck = (l) =>
-  l.map((x) => {
-    x.caseload_capacity_over = (x.caseFiles && x.caseFiles.length > x.caseload_capacity);
-    return x;
-  });
+  l.map(includePersonalCaseloadCapacityCheck);
 
 const createKeyWorkerListViewModel = (req) => (keyWorkers) =>
   req.app.locals.GovukAdminTemplate.create({
@@ -106,7 +108,7 @@ const createKeyWorkerUpdate = (req) => (keyWorker) => {
 const createKeyWorkerCaseloadViewModel = (req) => (keyWorker) =>
   req.app.locals.GovukAdminTemplate.create({
     page_title: 'My Caseload',
-    keyWorker: keyWorker,
+    keyWorker: includePersonalCaseloadCapacityCheck(keyWorker),
   });
 
 const listKeyWorkers = (req, res, next) =>

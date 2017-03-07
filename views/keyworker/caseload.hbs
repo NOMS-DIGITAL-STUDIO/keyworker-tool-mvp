@@ -1,9 +1,12 @@
 <article id="{{ keyWorker.staff_id }}">
   <header>
-
     <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}
       <small><a class="btn btn-link" href="/keyWorker/{{ keyWorker.staff_id }}">View details</a></small></h1>
-    <p class="lead">Currently responsible for <span title="{{keyWorker.caseFiles.length}} case files assigned">{{keyWorker.caseFiles.length}}</span> case files</p>
+    <p class="lead">Currently responsible for <span title="{{keyWorker.caseFiles.length}} case files assigned">{{keyWorker.caseFiles.length}}</span> case files.
+        {{keyWorker.given_name}} has been given a caseload capacity of {{keyWorker.caseload_capacity}}.</p>
+    {{#if keyWorker.caseload_capacity_over}}
+    <div class="alert alert-warning"><strong class="label label-warning">OVER CAPACITY</strong> {{keyWorker.given_name}} is currently over capacity please review their caseload at the earliest possible convienience.</div>
+    {{/if}}
   <header>
 </article>
 
