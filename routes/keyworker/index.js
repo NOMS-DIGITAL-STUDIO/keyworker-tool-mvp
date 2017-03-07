@@ -59,10 +59,16 @@ const getKeyWorkerCaseload = (id) =>
 const modifyKeyWorkerDetails = (x) =>
   router.keyWorker.modifyKeyWorker(x);
 
+const includeCaseloadCapacityCheck = (l) =>
+  l.map((x) => {
+    x.caseload_capacity_over = (x.caseFiles && x.caseFiles.length > x.caseload_capacity);
+    return x;
+  });
+
 const createKeyWorkerListViewModel = (req) => (keyWorkers) =>
   req.app.locals.GovukAdminTemplate.create({
     page_title: 'Your Staff',
-    keyWorkers: keyWorkers,
+    keyWorkers: includeCaseloadCapacityCheck(keyWorkers),
     total_keyWorkers: keyWorkers.length,
   });
 
@@ -92,15 +98,16 @@ const createKeyWorkerUpdate = (req) => (keyWorker) => {
   if (x.contact_number !== keyWorker.contact_number) update.contact_number = x.contact_number;
   if (x.contact_email !== keyWorker.contact_email) update.contact_email = x.contact_email;
   if (x.working_hours !== keyWorker.working_hours) update.working_hours = x.working_hours;
+  if (x.caseload_capacity !== keyWorker.caseload_capacity) update.caseload_capacity = x.caseload_capacity;
 
   return update;
 };
 
 const createKeyWorkerCaseloadViewModel = (req) => (keyWorker) =>
-req.app.locals.GovukAdminTemplate.create({
-  page_title: 'My Caseload',
-  keyWorker: keyWorker,
-});
+  req.app.locals.GovukAdminTemplate.create({
+    page_title: 'My Caseload',
+    keyWorker: keyWorker,
+  });
 
 const listKeyWorkers = (req, res, next) =>
   getKeyWorkerList()

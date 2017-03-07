@@ -17,7 +17,7 @@
         </div>
         <div class="col-md-2">
           <ul class="list-inline">
-            <li>Case files: <span class="badge badge-default" title="{{keyworker.caseFiles.length}} case files assigned">{{keyworker.caseFiles.length}}</span></li>
+            <li class="label label-{{#if keyworker.caseload_capacity_over}}danger{{else}}default{{/if}}">Case files: <span class="badge" title="{{keyworker.caseFiles.length}} case files assigned">{{keyworker.caseFiles.length}} / {{keyworker.caseload_capacity}}</span></li>
           </ul>
         </div>
       </div>

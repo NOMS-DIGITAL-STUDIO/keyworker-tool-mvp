@@ -50,6 +50,7 @@ const putKeyWorker = (x) => {
   if (x.contact_number) out.contact_number = x.contact_number;
   if (x.contact_email) out.contact_email = x.contact_email;
   if (x.working_hours) out.working_hours = x.working_hours;
+  if (x.caseload_capacity) out.caseload_capacity = x.caseload_capacity;
 
   out.full_name = (((x.given_name) ? x.given_name + ' ' : '') +
                    ((x.middle_names) ? x.middle_names + ' ' : '') +
@@ -79,13 +80,14 @@ const postKeyWorker = (x) =>
     contact_number: x.contact_number,
     contact_email: x.contact_email,
     working_hours: x.working_hours,
+    caseload_capacity: x.caseload_capacity,
   });
 
 const generate = (max) => {
   for (var i = keyWorker_count; i <= max; ++i) {
-    var gender = randomInt(20) === 20 ? "F" : "M";
-    var employment_status = randomInt(10) === 10 ? "Part time" : "Full time";
-    var given_names = (gender === "M" ? male_given_names : female_given_names);
+    var gender = randomInt(20) === 20 ? 'F' : 'M';
+    var employment_status = randomInt(10) === 10 ? 'Part time' : 'Full time';
+    var given_names = (gender === 'M' ? male_given_names : female_given_names);
     postKeyWorker({
       gender: gender,
       date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
@@ -96,6 +98,7 @@ const generate = (max) => {
       contact_number: getRandomTelephoneNumber(),
       contact_email: 'test@example.com',
       working_hours: 'Monday to Friday, 9 til 5',
+      caseload_capacity: (employment_status === 'Full time' ? 4 : 1) + randomInt(3),
     });
   }
 };
