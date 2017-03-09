@@ -1,9 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var OffenderServiceConnection = require('../../services/offender');
-var KeyworkerServiceConnection = require('../../services/keyworker');
-var CasefileServiceConnection = require('../../services/casefile');
-var CaseNoteServiceConnection = require('../../services/caseNote');
 
 const inspect = (x) => {
   console.log(x);
@@ -54,24 +50,30 @@ const getCasefileList = () =>
     router.keyworker.listKeyworkers(),
     router.offender.listOffenders(),
   ])
-  .then((data) => data[0].map((x) => {
-    x.keyworker = data[1].filter((kw) => kw.staff_id === x.keyworker)[0];
-    x.offender = data[2].filter((o) => o.offender_id === x.offender)[0];
-    return x;
+  .then((data) => data[0].map((cf) =>
+    router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
+      .then((car) => {
+        cf.keyworker = data[1].filter((kw) => kw.staff_id === car.keyworker)[0];
+        cf.offender = data[2].filter((o) => o.offender_id === cf.offender)[0];
+        return x;
+      });
   }));
 
 const getCasefileDetails = (id) =>
   router.casefile.getCasefile(id)
-  .then((x) =>
-    Promise.all([
-      router.keyworker.getKeyworker(x.keyworker),
-      router.offender.getOffender(x.offender),
-    ])
-    .then((data) => {
-      x.keyworker = data[0];
-      x.offender = data[1];
-      return x;
-    })
+  .then((cf) =>
+    router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
+      .then((car) =>
+        Promise.all([
+          router.keyworker.getKeyworker(car.keyworker),
+          router.offender.getOffender(cf.offender),
+        ])
+        .then((data) => {
+          cf.keyworker = data[0];
+          cf.offender = data[1];
+          return x;
+        })
+      )
   );
 
 const getCasefileDetailsWithNotes = (id) =>
@@ -87,15 +89,18 @@ const getCasefileDetailsWithNotes = (id) =>
     };
   })
   .then((x) =>
-    Promise.all([
-      router.keyworker.getKeyworker(x.casefile.keyworker),
-      router.offender.getOffender(x.casefile.offender),
-    ])
-    .then((data) => {
-      x.casefile.keyworker = data[0];
-      x.casefile.offender = data[1];
-      return x;
-    })
+    router.caseallocationrecord.getCaseAllocationForCasefile(x.casefile.casefile_id)
+      .then((car) =>
+        Promise.all([
+          router.keyworker.getKeyworker(car.keyworker),
+          router.offender.getOffender(x.casefile.offender),
+        ])
+        .then((data) => {
+          x.casefile.keyworker = data[0];
+          x.casefile.offender = data[1];
+          return x;
+        })
+      )
   );
 
 const createCasefileListViewModel = (req) => (casefiles) =>
@@ -183,6 +188,7 @@ module.exports = (o) => {
   router.casenote = o.services.casenote;
   router.keyworker = o.services.keyworker;
   router.offender = o.services.offender;
+  router.caseallocationrecord = o.services.caseallocationrecord;
 
   return router;
 };

@@ -187,6 +187,7 @@ module.exports = (o) => {
   router.casenote = o.services.casenote;
   router.keyworker = o.services.keyworker;
   router.offender = o.services.offender;
+  router.caseallocationrecord = o.services.caseallocationrecord;
 
   return router;
 };
