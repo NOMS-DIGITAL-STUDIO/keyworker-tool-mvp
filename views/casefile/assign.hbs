@@ -22,7 +22,12 @@
       <form action="/casefile/{{casefile.casefile_id}}/assign" method="post" class="form-group">
         <label class="col-sm-2 control-label">Key Worker</label>
         <div class="col-sm-3">
-          <input id="keyworker" name="keyworker" value="{{#if casefile.keyworker}}{{casefile.keyworker.given_name}} {{casefile.keyworker.surname}}{{/if}}" placeholder="unassigned" class="form-control"/>
+          <select id="keyworker" name="keyworker" class="form-control">
+            <option value="">No current assignment</option>
+            {{#each keyworkers as |keyworker|}}
+            <option value="{{keyworker.staff_id}}" {{option_selected keyworker.staff_id ../casefile.keyworker.staff_id}}>{{ keyworker.given_name }} {{ keyworker.surname }}, {{keyworker.age}}, {{expand_gender keyworker.gender}}</option>
+            {{/each}}
+          </select>
         </div>
         <div class="col-sm-2">
           <button type="submit" class="btn btn-primary">Update Assignment</button>
@@ -31,7 +36,12 @@
       <form action="/casefile/{{casefile.casefile_id}}/assign" method="post" class="form-group">
         <label class="col-sm-2 control-label">Prison Offender Manager</label>
         <div class="col-sm-3">
-          <input id="prisonOffenderManager" name="prisonOffenderManager" value="{{#if casefile.prisonOffenderManager}}{{casefile.prisonOffenderManager.given_name}} {{casefile.prisonOffenderManager.surname}}{{/if}}" placeholder="unassigned" class="form-control"/>
+          <select id="prisonoffendermanager" name="prisonoffendermanager" class="form-control">
+            <option value="">No current assignment</option>
+            {{#each prisonoffendermanagers as |prisonoffendermanager|}}
+            <option value="{{prisonoffendermanager.staff_id}}" {{option_selected prisonoffendermanager.staff_id ../casefile.prisonoffendermanager.staff_id}}>{{ prisonoffendermanager.given_name }} {{ prisonoffendermanager.surname }}, {{prisonoffendermanager.age}}, {{expand_gender prisonoffendermanager.gender}}</option>
+            {{/each}}
+          </select>
         </div>
         <div class="col-sm-2">
           <button type="submit" class="btn btn-primary">Update Assignment</button>
