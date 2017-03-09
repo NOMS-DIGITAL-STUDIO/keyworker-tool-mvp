@@ -1,13 +1,7 @@
 const moment = require('moment');
 
-const male_given_names = [ 'Matt', 'Thomas', 'William', 'Howard', 'Ross', 'Stephen', 'Nick', 'David', 'Robert', 'James', 'Gary', 'Phillip' ];
-const female_given_names = [ 'Jane', 'Mary', 'Elizabeth', 'Louise', 'Stacy', 'Anne', 'Claire', 'Helen' ];
-const surnames = [ 'Smith', 'Holloway', 'Jones', 'Harrison', 'Lennon', 'Hill', 'Black', 'Newton', 'Homer' ];
-
-var keyWorker_count = 0;
-const keyWorkers = {};
-
-const randomInt = (max) => Math.floor((Math.random() * max) + 1);
+var keyworker_count = 0;
+const keyworkers = {};
 
 const inspect = (x) => {
   console.log(x);
@@ -17,24 +11,31 @@ const inspect = (x) => {
 const objToList = (obj) => {
   var list = [];
 
-  for (var id in obj) list.push(obj[id]);
+  for (var id in obj) list.push(Object.assign({}, obj[id]));
 
   return list
-}
+};
 
-const filterById = (id) => (arr) => arr[id];
+const objToFilteredList = (match) => (obj) => {
+  var list = [];
 
-const getNextKeyWorkerId = () =>
-  ('0000' + keyWorker_count).substr(-4);
+  for (var id in obj) {
+    if (match(obj[id])) list.push(Object.assign({}, obj[id]));
+  }
 
-const getRandomTelephoneNumber = () =>
-  '01' + ('00' + randomInt(99)).substr(-2) + ('000' + randomInt(999)).substr(-3) + ('0000' + randomInt(9999)).substr(-4);
+  return list
+};
 
-const putKeyWorker = (x) => {
-  var out = keyWorkers[x.staff_id] = keyWorkers[x.staff_id] || {
+const firstItem = (arr) => arr[0];
+
+const getNextKeyworkerId = () =>
+  ('0000' + (keyworker_count + 1)).substr(-4);
+
+const putKeyworker = (x) => {
+  var out = keyworkers[x.staff_id] = keyworkers[x.staff_id] || {
     staff_id: x.staff_id,
     position: 'Key Worker',
-    caseFiles: [],
+    casefiles: [],
   };
 
   if (x.gender) out.gender = x.gender;
@@ -57,20 +58,14 @@ const putKeyWorker = (x) => {
                    ((x.surname) ? x.surname + ' ' : '')
                   ).trim();
 
-  keyWorker_count++;
+  keyworker_count++;
 
-  return keyWorkers[x.staff_id];
+  return new Promise((res, rej) => res(Object.assign({}, keyworkers[x.staff_id])));
 }
 
-const getKeyWorkers = () =>
-  new Promise((res, rej) => res(keyWorkers));
-
-const getKeyWorker = (id) =>
-  getKeyWorkers().then(filterById(id));
-
-const postKeyWorker = (x) =>
-  putKeyWorker({
-    staff_id: 'sid' + getNextKeyWorkerId(),
+const postKeyworker = (x) =>
+  putKeyworker({
+    staff_id: 'sid' + getNextKeyworkerId(),
     gender: x.gender,
     date_of_birth: x.date_of_birth,
     employment_status: x.employment_status,
@@ -83,37 +78,22 @@ const postKeyWorker = (x) =>
     caseload_capacity: x.caseload_capacity,
   });
 
-const generate = (max) => {
-  for (var i = keyWorker_count; i <= max; ++i) {
-    var gender = randomInt(20) === 20 ? 'F' : 'M';
-    var employment_status = randomInt(10) === 10 ? 'Part time' : 'Full time';
-    var given_names = (gender === 'M' ? male_given_names : female_given_names);
-    postKeyWorker({
-      gender: gender,
-      date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
-      employment_status: employment_status,
-      given_name: given_names[randomInt(given_names.length) - 1],
-      middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
-      surname: surnames[randomInt(surnames.length) - 1],
-      contact_number: getRandomTelephoneNumber(),
-      contact_email: 'test@example.com',
-      working_hours: 'Monday to Friday, 9 til 5',
-      caseload_capacity: (employment_status === 'Full time' ? 4 : 1) + randomInt(3),
-    });
-  }
-};
+const getKeyworkers = () =>
+  new Promise((res, rej) => res(keyworkers));
 
-// initialize
-generate(10);
+// exports
 
-module.exports.listKeyWorkers = () =>
-  getKeyWorkers().then(objToList);
+module.exports.listKeyworkers = () =>
+  getKeyworkers().then(objToList);
 
-module.exports.getKeyWorker = (id) =>
-  getKeyWorker(id);
+module.exports.getKeyworkerByName = (fullname) =>
+  getKeyworkers().then(objToFilteredList((x) => x.full_name === fullname)).then(firstItem);
 
-module.exports.registerKeyWorker = (x) =>
-  postKeyWorker(x);
+module.exports.getKeyworker = (id) =>
+  getKeyworkers().then(objToFilteredList((x) => x.staff_id === id)).then(firstItem);
 
-module.exports.modifyKeyWorker = (x) =>
-  putKeyWorker(x);
+module.exports.registerKeyworker = (x) =>
+  postKeyworker(x);
+
+module.exports.modifyKeyworker = (x) =>
+  putKeyworker(x);

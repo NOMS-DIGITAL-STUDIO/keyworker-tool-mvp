@@ -14,8 +14,10 @@
     <div class="col-md-6">
       <ul class="list-unstyled">
         <li>Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</li>
-        <li>Last entry: {{casenote_date lastRecordedCaseNote}}</li>
       </ul>
+      {{#if caseNoteOverdue}}
+      <div class="alert alert-warning"><strong class="label label-warning">Session overdue:</strong> The last time a session was recorded against this case was {{casenote_date lastRecordedCaseNote}}</div>
+      {{/if}}
       <div class="well well-sm">
         <div class="row">
           <div class="col-md-6">

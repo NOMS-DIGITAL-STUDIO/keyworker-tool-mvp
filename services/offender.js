@@ -1,12 +1,7 @@
 const moment = require('moment');
 
-const given_names = [ 'Matt', 'Thomas', 'William', 'Howard', 'Ross', 'Stephen', 'Nick', 'David', 'Robert', 'James', 'Gary', 'Phillip' ];
-const surnames = [ 'Smith', 'Holloway', 'Jones', 'Harrison', 'Lennon', 'Hill', 'Black', 'Newton', 'Homer' ];
-
 var offender_count = 0;
 const offenders = {};
-
-const randomInt = (max) => Math.floor((Math.random() * max) + 1);
 
 const inspect = (x) => {
   console.log(x);
@@ -16,15 +11,25 @@ const inspect = (x) => {
 const objToList = (obj) => {
   var list = [];
 
-  for (var id in obj) list.push(obj[id]);
+  for (var id in obj) list.push(Object.assign({}, obj[id]));
 
   return list
-}
+};
 
-const filterById = (id) => (arr) => arr[id];
+const objToFilteredList = (match) => (obj) => {
+  var list = [];
+
+  for (var id in obj) {
+    if (match(obj[id])) list.push(Object.assign({}, obj[id]));
+  }
+
+  return list
+};
+
+const firstItem = (arr) => arr[0];
 
 const getNextOffenderId = () =>
-  ('0000' + offender_count).substr(-4);
+  ('0000' + (offender_count + 1)).substr(-4);
 
 const putOffender = (x) => {
   var out = offenders[x.offender_id] = {
@@ -52,7 +57,7 @@ const putOffender = (x) => {
 
   offender_count++;
 
-  return offenders[x.offender_id];
+  return new Promise((res, rej) => res(Object.assign({}, offenders[x.offender_id])));
 }
 
 const postOffender = (x) =>
@@ -69,35 +74,16 @@ const postOffender = (x) =>
     surname: x.surname,
   });
 
-const generate = (max) => {
-  for (var i = offender_count; i <= max; ++i) {
-    var id = getNextOffenderId();
-    putOffender({
-      offender_id: 'oid' + id,
-      nomis_offender_id: 'noid' + id,
-      pnc_number: 'pnc' + id,
-      cro_number: 'cro' + id,
-      gender: 'M',
-      date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
-      image: 'http://placehold.it/150x150',
-      given_name: given_names[randomInt(given_names.length) - 1],
-      middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
-      surname: surnames[randomInt(surnames.length) - 1],
-    });
-  }
-};
-
 const getOffenders = () =>
   new Promise((res, rej) => res(offenders));
 
-// initalize
-generate(50);
+// exports
 
 module.exports.listOffenders = () =>
   getOffenders().then(objToList);
 
 module.exports.getOffender = (id) =>
-  getOffenders().then(filterById(id));
+  getOffenders().then(objToFilteredList((x) => x.offender_id === id)).then(firstItem);
 
 module.exports.registerOffender = (x) =>
   postOffender(x);

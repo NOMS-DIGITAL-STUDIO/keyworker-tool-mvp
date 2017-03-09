@@ -1,6 +1,6 @@
 var express = require('express');
+var moment = require('moment');
 var router = express.Router();
-var KeyWorkerServiceConnection = require('../../services/keyWorker');
 
 const inspect = (x) => {
   console.log(x);
@@ -46,21 +46,49 @@ const errorCheck = (resolve, reject) => (err, data) =>
 const rpcErrorCheck = (url, opts, resolve, reject) => (err, data) =>
   err ? reject(rpcError(url, opts, err)) : resolve(data);
 
-const getKeyWorkerList = () =>
-  router.keyWorker.listKeyWorkers();
-
 const getKeyWorkerDetails = (id) =>
-  router.keyWorker.getKeyWorker(id);
+  router.keyworker.getKeyworker(id);
 
-// TODO: seperate caseload request from keyworker request
 const getKeyWorkerCaseload = (id) =>
-  router.keyWorker.getKeyWorker(id);
+  Promise.all([
+    router.keyworker.getKeyworker(id),
+    router.casefile.listCasefilesByKeyWorker(id),
+  ])
+  .then((data) => {
+    var kw = data[0];
+
+    return Promise.all(data[1].map((cf) => {
+      if (cf.keyworker === kw.staff_id) cf.keyworker = kw;
+
+      return router.offender.getOffender(cf.offender)
+        .then((offender) => {
+          cf.offender = offender;
+          return cf;
+        });
+    }))
+    .then((casefiles) =>
+      Promise.all(casefiles.map((cf) =>
+          router.casenote.listCaseNotesByCasefile(cf.casefile_id)
+              .then((cns) => {
+                cf.lastRecordedCaseNote = cns[0].timestamp;
+                cf.caseNoteOverdue = moment().diff(moment(cf.lastRecordedCaseNote), 'days') > 7;
+              }))
+      )
+      .then((l) => {
+        kw.casefiles = casefiles;
+        return kw;
+      }));
+  });
+
+const getKeyWorkerList = () =>
+  router.keyworker.listKeyworkers()
+  .then((l) => Promise.all(l.map((x) => getKeyWorkerCaseload(x.staff_id))));
 
 const modifyKeyWorkerDetails = (x) =>
-  router.keyWorker.modifyKeyWorker(x);
+  router.keyworker.modifyKeyworker(x);
 
 const includePersonalCaseloadCapacityCheck = (x) => {
-  x.caseload_capacity_over = (x.caseFiles && x.caseFiles.length > x.caseload_capacity);
+  x.caseload_capacity_over = (x.casefiles && x.casefiles.length > x.caseload_capacity);
   return x;
 };
 
@@ -142,13 +170,6 @@ const displayKeyWorkerCaseload = (req, res, next) =>
     .then(renderKeyWorkerCaseload(res))
     .catch(failWithError(res, next));
 
-// middleware
-
-const setup = (req, res, next) =>
-  (router.keyWorker = router.keyWorker || KeyWorkerServiceConnection) && next();
-
-router.use(setup);
-
 // public
 
 router.get('/', listKeyWorkers);
@@ -159,4 +180,11 @@ router.get('/:sid/caseload', displayKeyWorkerCaseload);
 
 // exports
 
-module.exports = router;
+module.exports = (o) => {
+  router.casefile = o.services.casefile;
+  router.casenote = o.services.casenote;
+  router.keyworker = o.services.keyworker;
+  router.offender = o.services.offender;
+
+  return router;
+};

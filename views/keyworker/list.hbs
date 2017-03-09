@@ -17,12 +17,12 @@
         </div>
         <div class="col-md-2">
           <ul class="list-inline">
-            <li class="label label-{{#if keyworker.caseload_capacity_over}}danger{{else}}default{{/if}}">Case files: <span class="badge" title="{{keyworker.caseFiles.length}} case files assigned">{{keyworker.caseFiles.length}} / {{keyworker.caseload_capacity}}</span></li>
+            <li class="label label-{{#if keyworker.caseload_capacity_over}}danger{{else}}default{{/if}}">Case files: <span class="badge" title="{{keyworker.casefiles.length}} case files assigned">{{keyworker.casefiles.length}} / {{keyworker.caseload_capacity}}</span></li>
           </ul>
         </div>
       </div>
 
-      {{#unless keyworker.caseFiles.length}}
+      {{#unless keyworker.casefiles.length}}
       <div class="alert alert-info"><strong>No case files assigned:</strong> This member of staff currently has no case files assigned to them</div>
       {{/unless}}
     </article>

@@ -2,7 +2,7 @@
   <header>
     <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}
       <small><a class="btn btn-link" href="/keyWorker/{{ keyWorker.staff_id }}">View details</a></small></h1>
-    <p class="lead">Currently responsible for <span title="{{keyWorker.caseFiles.length}} case files assigned">{{keyWorker.caseFiles.length}}</span> case files.
+    <p class="lead">Currently responsible for <span title="{{keyWorker.casefiles.length}} case files assigned">{{keyWorker.casefiles.length}}</span> case files.
         {{keyWorker.given_name}} has been given a caseload capacity of {{keyWorker.caseload_capacity}}.</p>
     {{#if keyWorker.caseload_capacity_over}}
     <div class="alert alert-warning"><strong class="label label-warning">OVER CAPACITY</strong> {{keyWorker.given_name}} is currently over capacity please review their caseload at the earliest possible convienience.</div>
@@ -20,10 +20,10 @@
     --}}
   </div>
   <div class="col-md-9">
-    {{#if keyWorker.caseFiles}}
+    {{#if keyWorker.casefiles}}
       <div class="results results-offender">
-        {{#each keyWorker.caseFiles as |caseFile| }}
-        {{> caseFileListEntry caseFile}}
+        {{#each keyWorker.casefiles as |casefile| }}
+        {{> casefileListEntry casefile}}
         {{/each}}
       </div>
     {{else}}

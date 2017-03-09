@@ -8,4 +8,4 @@ router.get('/', (req, res) => res.redirect('/casefile/'));
 
 // exports
 
-module.exports = router;
+module.exports = (o) => router;

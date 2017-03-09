@@ -1,10 +1,11 @@
-{{#with caseFile}}
+{{#with casefile}}
 <article id="{{ casefile_id }}" style="border-bottom:1px solid #ccc;margin-bottom:12px">
   <h1><a href="/casefile/{{ casefile_id }}">{{offender.given_name}} {{offender.surname}}, {{offender.age}}, {{expand_gender offender.gender}}</a>
     {{#if offender.aliases}}
     <small>{{#each offender.aliases as |alias|}}{{offender.aliases}}{{/each}}</small>
     {{/if}}</h1>
-  <p class="lead">Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}</p>
+  <p class="lead">Sentenced by {{sentence.courtName}}, {{sentence_date sentence.date}}<br/>
+    Last entry: {{casenote_date lastRecordedCaseNote}}</p>
 
   <div class="row">
     <div class="col-md-2">
@@ -57,7 +58,7 @@
 
 <h2>Session Notes</h2>
 
-<form method="post" action="/caseFile/{{ casefile_id }}/record" class="form-horizontal" style="border-bottom:1px solid #ccc;margin-bottom:12px">
+<form method="post" action="/casefile/{{ casefile_id }}/record" class="form-horizontal" style="border-bottom:1px solid #ccc;margin-bottom:12px">
   <h4>Record a new Session Note</h4>
   <div class="form-group">
     <label class="col-sm-2 control-label">Date</label>
