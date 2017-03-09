@@ -50,14 +50,16 @@ const getCasefileList = () =>
     router.keyworker.listKeyworkers(),
     router.offender.listOffenders(),
   ])
-  .then((data) => data[0].map((cf) =>
-    router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
-      .then((car) => {
-        cf.keyworker = data[1].filter((kw) => kw.staff_id === car.keyworker)[0];
-        cf.offender = data[2].filter((o) => o.offender_id === cf.offender)[0];
-        return x;
-      });
-  }));
+  .then((data) =>
+    Promise.all(data[0].map((cf) =>
+      router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
+        .then((car) => {
+          if (car) cf.keyworker = data[1].filter((kw) => kw.staff_id === car.staff_id)[0];
+          cf.offender = data[2].filter((o) => o.offender_id === cf.offender)[0];
+          return cf;
+        }))
+    )
+  );
 
 const getCasefileDetails = (id) =>
   router.casefile.getCasefile(id)
@@ -65,13 +67,13 @@ const getCasefileDetails = (id) =>
     router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
       .then((car) =>
         Promise.all([
-          router.keyworker.getKeyworker(car.keyworker),
+          (car) ? router.keyworker.getKeyworker(car.staff_id) : undefined,
           router.offender.getOffender(cf.offender),
         ])
         .then((data) => {
           cf.keyworker = data[0];
           cf.offender = data[1];
-          return x;
+          return cf;
         })
       )
   );
@@ -92,7 +94,7 @@ const getCasefileDetailsWithNotes = (id) =>
     router.caseallocationrecord.getCaseAllocationForCasefile(x.casefile.casefile_id)
       .then((car) =>
         Promise.all([
-          router.keyworker.getKeyworker(car.keyworker),
+          (car) ? router.keyworker.getKeyworker(car.staff_id) : undefined,
           router.offender.getOffender(x.casefile.offender),
         ])
         .then((data) => {
@@ -131,8 +133,12 @@ const createCasefileAssignmentToolViewModel = (req) => (casefile) =>
     casefile: casefile,
   });
 
-const assignKeyWorker = (keyworker_fullname) => (casefile) =>
+const assignKeyWorker = (keyworker_fullname, casefile) =>
+  // TODO: record case assignment
   router.casefile.assignKeyWorker(keyworker_fullname, casefile.casefile_id);
+
+const recordCaseNote = (x) =>
+  router.casenote.recordCaseNote(x);
 
 const listUnassignedCasefiles = (req, res, next) =>
   getCasefileList()
@@ -140,11 +146,11 @@ const listUnassignedCasefiles = (req, res, next) =>
     .then(renderUnassignedCasefileList(res))
     .catch(failWithError(res, next));
 
-  const listCasefiles = (req, res, next) =>
-    getCasefileList()
-      .then(createCasefileListViewModel(req))
-      .then(renderCasefileList(res))
-      .catch(failWithError(res, next));
+const listCasefiles = (req, res, next) =>
+  getCasefileList()
+    .then(createCasefileListViewModel(req))
+    .then(renderCasefileList(res))
+    .catch(failWithError(res, next));
 
 const displayCasefileDetails = (req, res, next) =>
   getCasefileDetailsWithNotes(req.params.cnid)
@@ -159,18 +165,20 @@ const displayCasefileAssignmentTool = (req, res, next) =>
     .catch(failWithError(res, next));
 
 const recordNewCasefileAssignment = (req, res, next) =>
-  getCasefileDetails(req.params.cnid)
-    .then(assignKeyWorker(req.body.keyworker))
-    .then(redirect(res, req.baseUrl + '/' + req.params.cnid));
+  assignKeyWorker(req.body.keyworker, req.params.cnid)
+    .then(redirect(res, req.baseUrl + '/' + req.params.cnid))
+    .catch(failWithError(res, next));
 
 const recordNewCaseNote = (req, res, next) =>
-  router.casenote.recordCaseNote({
+  recordCaseNote({
     casefile_id: req.params.cnid,
+    // TODO: this has to be the actual ID of the key worker!!
     staff_id: 'sid0005',
     type: router.casenote.types.session,
     body: req.body.note,
   })
-  .then(redirect(res, req.baseUrl + '/' + req.params.cnid));
+  .then(redirect(res, req.baseUrl + '/' + req.params.cnid))
+  .catch(failWithError(res, next));
 
 // public
 

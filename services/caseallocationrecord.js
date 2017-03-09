@@ -30,6 +30,12 @@ const firstItem = (arr) => arr[0];
 const sortByTimestamp = (l) =>
   l.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
+const picMostRecentCaseFileRecords = (l) =>
+  objToList(l.reduce((a, car) => {
+    if (!a[car.casefile_id] || a[car.casefile_id].timestamp < car.timestamp) a[car.casefile_id] = car;
+    return a;
+  }, {}));
+
 const getNextCaseAllocationRecordId = () =>
   ('0000' + (caseallocationrecord_count + 1)).substr(-4);
 
@@ -85,8 +91,7 @@ module.exports.getCaseAllocationForKeyworker = (id) =>
   getCaseAllocationRecord()
     .then(objToFilteredList((x) => x.staff_id === id))
     .then(sortByTimestamp)
-  //.then(groupByCasefile)
-  //.then(firstItemInGroups);
+    .then(picMostRecentCaseFileRecords);
 
 module.exports.recordCaseAllocation = (x) => {
   var r = Object.assign({}, x);

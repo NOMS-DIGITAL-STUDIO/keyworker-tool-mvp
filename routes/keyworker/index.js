@@ -52,34 +52,40 @@ const getKeyWorkerDetails = (id) =>
 const getKeyWorkerCaseload = (id) =>
   Promise.all([
     router.keyworker.getKeyworker(id),
-    router.casefile.listCasefilesByKeyWorker(id),
+    router.caseallocationrecord.getCaseAllocationForKeyworker(id),
   ])
   .then((data) => {
     var kw = data[0];
+    var cars = data[1];
 
-    return Promise.all(data[1].map((cf) => {
-      if (cf.keyworker === kw.staff_id) cf.keyworker = kw;
-
-      return router.offender.getOffender(cf.offender)
-        .then((offender) => {
-          cf.offender = offender;
+    return Promise.all(cars.map((car) =>
+      router.casefile.getCasefile(car.casefile_id)
+        .then((cf) => {
+          if (car.staff_id === kw.staff_id) cf.keyworker = kw;
           return cf;
-        });
-    }))
-    .then((casefiles) =>
-      Promise.all(casefiles.map((cf) =>
-          router.casenote.listCaseNotesByCasefile(cf.casefile_id)
-              .then((cns) => {
-                if (cns && cns[0]) {
-                  cf.lastRecordedCaseNote = cns[0].timestamp;
-                  cf.caseNoteOverdue = moment().diff(moment(cf.lastRecordedCaseNote), 'days') > 7;
-                }
-              }))
-      )
-      .then((l) => {
-        kw.casefiles = casefiles;
-        return kw;
-      }));
+        })
+        .then((cf) =>
+          router.offender.getOffender(cf.offender)
+            .then((offender) => {
+              cf.offender = offender;
+              return cf;
+            })
+        )
+      ))
+      .then((casefiles) =>
+        Promise.all(casefiles.map((cf) =>
+            router.casenote.listCaseNotesByCasefile(cf.casefile_id)
+                .then((cns) => {
+                  if (cns && cns[0]) {
+                    cf.lastRecordedCaseNote = cns[0].timestamp;
+                    cf.caseNoteOverdue = moment().diff(moment(cf.lastRecordedCaseNote), 'days') > 7;
+                  }
+                }))
+        )
+        .then((l) => {
+          kw.casefiles = casefiles;
+          return kw;
+        }));
   });
 
 const getKeyWorkerList = () =>
