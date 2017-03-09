@@ -4,6 +4,7 @@ const config = {
     keyworker: require('../services/keyworker'),
     casefile: require('../services/casefile'),
     casenote: require('../services/casenote'),
+    caseallocationrecord: require('../services/caseallocationrecord'),
   },
 }
 

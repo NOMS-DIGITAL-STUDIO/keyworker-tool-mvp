@@ -70,8 +70,10 @@ const getKeyWorkerCaseload = (id) =>
       Promise.all(casefiles.map((cf) =>
           router.casenote.listCaseNotesByCasefile(cf.casefile_id)
               .then((cns) => {
-                cf.lastRecordedCaseNote = cns[0].timestamp;
-                cf.caseNoteOverdue = moment().diff(moment(cf.lastRecordedCaseNote), 'days') > 7;
+                if (cns && cns[0]) {
+                  cf.lastRecordedCaseNote = cns[0].timestamp;
+                  cf.caseNoteOverdue = moment().diff(moment(cf.lastRecordedCaseNote), 'days') > 7;
+                }
               }))
       )
       .then((l) => {

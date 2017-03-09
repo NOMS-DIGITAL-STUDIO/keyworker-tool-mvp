@@ -30,25 +30,28 @@ const firstItem = (arr) => arr[0];
 const getNextCasefileId = () =>
   ('0000' + (casefile_count + 1)).substr(-4);
 
-const unlinkKeyWorker = (keyworker_id, cf) => {
+const unlinkKeyWorker = (keyworker_id, casefile_id) => {
+  var cf = casefiles[casefile_id];
   if (cf.keyWorker === keyworker_id) cf.keyworker = undefined;
 };
 
-const linkKeyWorker = (keyworker_id, cf) => {
-  cf.keyworker = keyworker_id;
+const linkKeyWorker = (keyworker_id, casefile_id) => {
+  var cf = casefiles[casefile_id];
+  if (!cf.keyWorker) cf.keyworker = keyworker_id;
 };
 
 const findKeyWorkerByName = (fullname) =>
   KeyWorkerServiceConnection.getKeyWorkerByName(fullname);
 
+const assignKeyWorkerById = (staff_id) => (casefile) => {
+  unlinkKeyWorker(staff_id, casefile.casefile_id);
+  linkKeyWorker(staff_id, casefile.casefile_id);
+  return casefile;
+};
+
 const assignKeyWorkerByName = (fullname) => (casefile) =>
   findKeyWorkerByName(fullname)
-    .then((keyWorker) => {
-      if (keyWorker) {
-        unlinkKeyWorker(keyWorker.staff_id, casefile);
-        linkKeyWorker(keyWorker.staff_id, casefile);
-      }
-    })
+    .then((keyWorker) => keyWorker ? assignKeyWorkerById(keyWorker.staff_id)(casefile) : keyworker)
     .then(() => casefile);
 
 
@@ -95,6 +98,9 @@ module.exports.getCasefileByOffender = (id) =>
 
 module.exports.getCasefile = (id) =>
   getCasefiles().then(objToFilteredList((x) => x.casefile_id === id)).then(firstItem);
+
+module.exports.assignKeyWorkerById = (id, staff_id) =>
+  getCasefiles().then(objToFilteredList((x) => x.casefile_id === id)).then(firstItem).then(assignKeyWorkerById(staff_id));
 
 module.exports.assignKeyWorker = (fullname, id) =>
   getCasefiles().then(objToFilteredList((x) => x.casefile_id === id)).then(firstItem).then(assignKeyWorkerByName(fullname));
