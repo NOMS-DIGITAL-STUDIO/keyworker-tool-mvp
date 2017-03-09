@@ -78,7 +78,7 @@ module.exports.listCaseAllocationRecordsForCasefile = (id) =>
 
 module.exports.getCaseAllocationForCasefile = (id) =>
   getCaseAllocationRecord()
-    .then(objToFilteredList((x) => x.casefile_id === id))
+    .then(objToFilteredList((x) => x.casefile_id === id && x.type === module.exports.types.Allocation))
     .then(sortByTimestamp)
     .then(firstItem);
 
@@ -89,9 +89,10 @@ module.exports.listCaseAllocationRecordsForKeyworker = (id) =>
 
 module.exports.getCaseAllocationForKeyworker = (id) =>
   getCaseAllocationRecord()
-    .then(objToFilteredList((x) => x.staff_id === id))
+    .then(objToFilteredList((x) => x.type === module.exports.types.Allocation))
     .then(sortByTimestamp)
-    .then(picMostRecentCaseFileRecords);
+    .then(picMostRecentCaseFileRecords)
+    .then((l) => l.filter((x) => x.staff_id === id));
 
 module.exports.recordCaseAllocation = (x) => {
   var r = Object.assign({}, x);

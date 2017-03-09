@@ -144,7 +144,8 @@ const createCasefileAssignmentToolViewModel = (req) => (data) =>
 const assignKeyWorker = (staff_id, casefile_id) =>
   Promise.all([
     router.caseallocationrecord.recordCaseAllocation({ casefile_id: casefile_id, staff_id: staff_id }),
-    router.caseallocationrecord.recordCaseDeallocation({ casefile_id: casefile_id, staff_id: staff_id }),
+    router.caseallocationrecord.getCaseAllocationForCasefile(casefile_id)
+      .then((car) => router.caseallocationrecord.recordCaseDeallocation({ casefile_id: casefile_id, staff_id: car.keyworker })),
   ]);
 
 const recordCaseNote = (x) =>
