@@ -156,14 +156,9 @@ const generateCasefile = (keyworkers) => (offender) => {
   })
   .then((cf) =>
     (randomInt(3) !== 3) ?
-      Promise.all([
-        services.casefile.assignKeyWorkerById(cf.casefile_id, kw),
-        services.caseallocationrecord.recordCaseAllocation({
-          casefile_id: cf.casefile_id,
-          staff_id: kw,
-        }),
-      ])
-      .then(() => services.casefile.getCasefile(cf.casefile_id)) : cf);
+    services.caseallocationrecord.recordCaseAllocation({ casefile_id: cf.casefile_id, staff_id: kw }).then(() => cf) :
+    cf
+  );
 };
 
 const generateCasefiles = (data) =>

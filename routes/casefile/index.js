@@ -62,21 +62,28 @@ const getCasefileList = () =>
   );
 
 const getCasefileDetails = (id) =>
-  router.casefile.getCasefile(id)
-  .then((cf) =>
-    router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
-      .then((car) =>
-        Promise.all([
-          (car) ? router.keyworker.getKeyworker(car.staff_id) : undefined,
-          router.offender.getOffender(cf.offender),
-        ])
-        .then((data) => {
-          cf.keyworker = data[0];
-          cf.offender = data[1];
-          return cf;
-        })
-      )
-  );
+  Promise.all([
+    router.casefile.getCasefile(id)
+      .then((cf) =>
+        router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
+          .then((car) =>
+            Promise.all([
+              (car) ? router.keyworker.getKeyworker(car.staff_id) : undefined,
+              router.offender.getOffender(cf.offender),
+            ])
+            .then((data) => {
+              cf.keyworker = data[0];
+              cf.offender = data[1];
+              return cf;
+            })
+          )
+      ),
+    router.keyworker.listKeyworkers(),
+  ])
+  .then((data) => ({
+    casefile: data[0],
+    keyworkers: data[1],
+  }));
 
 const getCasefileDetailsWithNotes = (id) =>
   Promise.all([
@@ -127,15 +134,18 @@ const createCasefileDetailsViewModel = (req) => (data) =>
     caseNotes: data.caseNotes,
   });
 
-const createCasefileAssignmentToolViewModel = (req) => (casefile) =>
+const createCasefileAssignmentToolViewModel = (req) => (data) =>
   req.app.locals.GovukAdminTemplate.create({
-    page_title: 'Assign Staff to Case file for ' + casefile.offender.given_name + ' ' + casefile.offender.surname,
-    casefile: casefile,
+    page_title: 'Assign Staff to Case file for ' + data.casefile.offender.given_name + ' ' + data.casefile.offender.surname,
+    casefile: data.casefile,
+    keyworkers: data.keyworkers,
   });
 
-const assignKeyWorker = (keyworker_fullname, casefile) =>
-  // TODO: record case assignment
-  router.casefile.assignKeyWorker(keyworker_fullname, casefile.casefile_id);
+const assignKeyWorker = (staff_id, casefile_id) =>
+  Promise.all([
+    router.caseallocationrecord.recordCaseAllocation({ casefile_id: casefile_id, staff_id: staff_id }),
+    router.caseallocationrecord.recordCaseDeallocation({ casefile_id: casefile_id, staff_id: staff_id }),
+  ]);
 
 const recordCaseNote = (x) =>
   router.casenote.recordCaseNote(x);
@@ -153,41 +163,41 @@ const listCasefiles = (req, res, next) =>
     .catch(failWithError(res, next));
 
 const displayCasefileDetails = (req, res, next) =>
-  getCasefileDetailsWithNotes(req.params.cnid)
+  getCasefileDetailsWithNotes(req.params.cfid)
     .then(createCasefileDetailsViewModel(req))
     .then(renderCasefileDetails(res))
     .catch(failWithError(res, next));
 
 const displayCasefileAssignmentTool = (req, res, next) =>
-  getCasefileDetails(req.params.cnid)
+  getCasefileDetails(req.params.cfid)
     .then(createCasefileAssignmentToolViewModel(req))
     .then(renderCasefileAssignmentTool(res))
     .catch(failWithError(res, next));
 
 const recordNewCasefileAssignment = (req, res, next) =>
-  assignKeyWorker(req.body.keyworker, req.params.cnid)
-    .then(redirect(res, req.baseUrl + '/' + req.params.cnid))
+  assignKeyWorker(req.body.keyworker, req.params.cfid)
+    .then(redirect(res, req.baseUrl + '/' + req.params.cfid))
     .catch(failWithError(res, next));
 
 const recordNewCaseNote = (req, res, next) =>
   recordCaseNote({
-    casefile_id: req.params.cnid,
+    casefile_id: req.params.cfid,
     // TODO: this has to be the actual ID of the key worker!!
     staff_id: 'sid0005',
     type: router.casenote.types.session,
     body: req.body.note,
   })
-  .then(redirect(res, req.baseUrl + '/' + req.params.cnid))
+  .then(redirect(res, req.baseUrl + '/' + req.params.cfid))
   .catch(failWithError(res, next));
 
 // public
 
 router.get('/', listUnassignedCasefiles);
 router.get('/all', listCasefiles);
-router.get('/:cnid', displayCasefileDetails);
-router.get('/:cnid/assign', displayCasefileAssignmentTool);
-router.post('/:cnid/assign', recordNewCasefileAssignment);
-router.post('/:cnid/record', recordNewCaseNote);
+router.get('/:cfid', displayCasefileDetails);
+router.get('/:cfid/assign', displayCasefileAssignmentTool);
+router.post('/:cfid/assign', recordNewCasefileAssignment);
+router.post('/:cfid/record', recordNewCaseNote);
 
 // exports
 

@@ -40,21 +40,6 @@ const linkKeyWorker = (keyworker_id, casefile_id) => {
   if (!cf.keyWorker) cf.keyworker = keyworker_id;
 };
 
-const findKeyWorkerByName = (fullname) =>
-  KeyWorkerServiceConnection.getKeyWorkerByName(fullname);
-
-const assignKeyWorkerById = (staff_id) => (casefile) => {
-  unlinkKeyWorker(staff_id, casefile.casefile_id);
-  linkKeyWorker(staff_id, casefile.casefile_id);
-  return casefile;
-};
-
-const assignKeyWorkerByName = (fullname) => (casefile) =>
-  findKeyWorkerByName(fullname)
-    .then((keyWorker) => keyWorker ? assignKeyWorkerById(keyWorker.staff_id)(casefile) : keyworker)
-    .then(() => casefile);
-
-
 const putCasefile = (x) => {
   var out = casefiles[x.casefile_id] = casefiles[x.casefile_id] || {
     casefile_id: x.casefile_id,
@@ -98,12 +83,6 @@ module.exports.getCasefileByOffender = (id) =>
 
 module.exports.getCasefile = (id) =>
   getCasefiles().then(objToFilteredList((x) => x.casefile_id === id)).then(firstItem);
-
-module.exports.assignKeyWorkerById = (id, staff_id) =>
-  getCasefiles().then(objToFilteredList((x) => x.casefile_id === id)).then(firstItem).then(assignKeyWorkerById(staff_id));
-
-module.exports.assignKeyWorker = (fullname, id) =>
-  getCasefiles().then(objToFilteredList((x) => x.casefile_id === id)).then(firstItem).then(assignKeyWorkerByName(fullname));
 
 module.exports.registerCasefile = (x) =>
   postCasefile(x);
