@@ -16,6 +16,7 @@ const renderCasefileList = (res) => format(res, 'casefile/list');
 const renderUnassignedCasefileList = (res) => format(res, 'casefile/unassignedlist');
 const renderCasefileDetails = (res) => format(res, 'casefile/details');
 const renderCasefileAssignmentTool = (res) => format(res, 'casefile/assign');
+const renderCasefileAssignmentHistory = (res) => format(res, 'casefile/assignmenthistory');
 
 const redirect = (res, route) => () => res.redirect(route) && res;
 
@@ -61,7 +62,7 @@ const getCasefileList = () =>
     )
   );
 
-const getCasefileDetails = (id) =>
+const getCasefileAssignmentToolDetails = (id) =>
   Promise.all([
     router.casefile.getCasefile(id)
       .then((cf) =>
@@ -84,6 +85,31 @@ const getCasefileDetails = (id) =>
     casefile: data[0],
     keyworkers: data[1],
   }));
+
+const getCasefileAssignmentHistory = (id) =>
+  Promise.all([
+    router.casefile.getCasefile(id)
+      .then((cf) =>
+        router.caseallocationrecord.getCaseAllocationForCasefile(cf.casefile_id)
+          .then((car) =>
+            Promise.all([
+              (car) ? router.keyworker.getKeyworker(car.staff_id) : undefined,
+              router.offender.getOffender(cf.offender),
+            ])
+            .then((data) => {
+              cf.keyworker = data[0];
+              cf.offender = data[1];
+              return cf;
+            })
+          )
+      ),
+    router.caseallocationrecord.listCaseAllocationRecordsForCasefile(id),
+  ])
+  .then((data) => ({
+    casefile: data[0],
+    history: data[1],
+  }));
+
 
 const getCasefileDetailsWithNotes = (id) =>
   Promise.all([
@@ -134,6 +160,13 @@ const createCasefileDetailsViewModel = (req) => (data) =>
     caseNotes: data.caseNotes,
   });
 
+const createCasefileAssignmentHistory = (req) => (data) =>
+  req.app.locals.GovukAdminTemplate.create({
+    page_title: 'Assignment history of Staff to Case file for ' + data.casefile.offender.given_name + ' ' + data.casefile.offender.surname,
+    casefile: data.casefile,
+    history: data.history,
+  });
+
 const createCasefileAssignmentToolViewModel = (req) => (data) =>
   req.app.locals.GovukAdminTemplate.create({
     page_title: 'Assign Staff to Case file for ' + data.casefile.offender.given_name + ' ' + data.casefile.offender.surname,
@@ -142,11 +175,9 @@ const createCasefileAssignmentToolViewModel = (req) => (data) =>
   });
 
 const assignKeyWorker = (staff_id, casefile_id) =>
-  Promise.all([
-    router.caseallocationrecord.recordCaseAllocation({ casefile_id: casefile_id, staff_id: staff_id }),
-    router.caseallocationrecord.getCaseAllocationForCasefile(casefile_id)
-      .then((car) => router.caseallocationrecord.recordCaseDeallocation({ casefile_id: casefile_id, staff_id: car.keyworker })),
-  ]);
+  router.caseallocationrecord.getCaseAllocationForCasefile(casefile_id)
+    .then((car) => car ? router.caseallocationrecord.recordCaseDeallocation({ casefile_id: casefile_id, staff_id: car.keyworker }) : undefined)
+    .then(() => router.caseallocationrecord.recordCaseAllocation({ casefile_id: casefile_id, staff_id: staff_id }));
 
 const recordCaseNote = (x) =>
   router.casenote.recordCaseNote(x);
@@ -169,8 +200,14 @@ const displayCasefileDetails = (req, res, next) =>
     .then(renderCasefileDetails(res))
     .catch(failWithError(res, next));
 
+const displayCasefileAssignmentHistory = (req, res, next) =>
+  getCasefileAssignmentHistory(req.params.cfid)
+    .then(createCasefileAssignmentHistory(req))
+    .then(renderCasefileAssignmentHistory(res))
+    .catch(failWithError(res, next));
+
 const displayCasefileAssignmentTool = (req, res, next) =>
-  getCasefileDetails(req.params.cfid)
+  getCasefileAssignmentToolDetails(req.params.cfid)
     .then(createCasefileAssignmentToolViewModel(req))
     .then(renderCasefileAssignmentTool(res))
     .catch(failWithError(res, next));
@@ -197,6 +234,7 @@ router.get('/', listUnassignedCasefiles);
 router.get('/all', listCasefiles);
 router.get('/:cfid', displayCasefileDetails);
 router.get('/:cfid/assign', displayCasefileAssignmentTool);
+router.get('/:cfid/assign/history', displayCasefileAssignmentHistory);
 router.post('/:cfid/assign', recordNewCasefileAssignment);
 router.post('/:cfid/record', recordNewCaseNote);
 
