@@ -1,29 +1,16 @@
 
 <article id="{{ casefile.casefile_id }}">
   <h1>{{page_title}}</h1>
-  <div class="row">
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <img src="/images/placeholder.png" alt="Head shot of {{ casefile.offender.given_name }} {{ casefile.offender.surname }}">
-        <p class="text-center"><strong>{{casefile.casefile_id}}</strong></p>
-      </div>
-    </div>
-    <div class="col-md-2 pull-right">
-      <ul class="list-inline">
-        {{#each casefile.registers as |register|}}
-        <li><abbr class="label label-default" title="{{register.label}}">{{register.abbr}}</abbr></li>
-        {{/each}}
-      </ul>
-    </div>
-  </div>
 
   <ul class="list-unstyled">
     {{#each history as |record|}}
+    {{#unless record.type}}
     <li class="row">
       <span class="col-sm-2">[{{record.type}}]</span>
-      <span class="col-sm-8">{{record.staff_id}}</span>
-      <span class="col-sm-2">{{record.timestamp}}</span>
+      <span class="col-sm-8"><a class="btn btn-default" href="/keyworker/{{ record.staff_id }}">View details</a></span>
+      <span class="col-sm-2">{{assignment_date record.timestamp}}</span>
     </li>
+    {{/unless}}
     {{/each}}
   </ul>
 </article>

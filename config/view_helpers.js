@@ -20,6 +20,7 @@ Helpers.sentence_date = (datetime) => safeDateString(datetime, 'MMM YY');
 Helpers.casenote_date = (datetime) => safeDateString(datetime, 'MMMM Do YYYY, h:mma');
 Helpers.date_input_value = (datetime) => safeDateString(datetime, 'YYYY-MM-DD HH:mm');
 Helpers.profile_dob = (datetime) => safeDateString(datetime, 'DD MMM YY');
+Helpers.assignment_date = (datetime) => safeDateString(datetime, 'Do MMM YYYY');
 
 Helpers.expand_gender = (x) => {
   switch (x) {
