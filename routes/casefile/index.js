@@ -105,10 +105,26 @@ const getCasefileAssignmentHistory = (id) =>
       ),
     router.caseallocationrecord.listCaseAllocationRecordsForCasefile(id),
   ])
-  .then((data) => ({
-    casefile: data[0],
-    history: data[1],
-  }));
+  .then((data) => {
+    var out = {
+      casefile: data[0],
+      history: [],
+    };
+
+    var ids = data[1].reduce((a, b) => {
+      if (!~a.indexOf(b.staff_id)) a.push(b.staff_id);
+      return a;
+    }, []);
+
+    return data[1].length > 0 ? router.keyworker.getKeyworkers(ids)
+      .then((kws) => {
+        out.history = data[1].map((x) => {
+          x.keyworker = kws.filter((kw) => kw.staff_id === x.staff_id)[0];
+          return x;
+        });
+        return out;
+      }) : out;
+  });
 
 
 const getCasefileDetailsWithNotes = (id) =>

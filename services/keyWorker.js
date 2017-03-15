@@ -89,6 +89,9 @@ module.exports.listKeyworkers = () =>
 module.exports.getKeyworkerByName = (fullname) =>
   getKeyworkers().then(objToFilteredList((x) => x.full_name === fullname)).then(firstItem);
 
+module.exports.getKeyworkers = (ids) =>
+  getKeyworkers().then(objToFilteredList((x) => ~ids.indexOf(x.staff_id)));
+
 module.exports.getKeyworker = (id) =>
   getKeyworkers().then(objToFilteredList((x) => x.staff_id === id)).then(firstItem);
 

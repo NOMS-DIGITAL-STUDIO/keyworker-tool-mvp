@@ -6,11 +6,23 @@
     {{#each history as |record|}}
     {{#unless record.type}}
     <li class="row">
-      <span class="col-sm-2">[{{record.type}}]</span>
-      <span class="col-sm-8"><a class="btn btn-default" href="/keyworker/{{ record.staff_id }}">View details</a></span>
       <span class="col-sm-2">{{assignment_date record.timestamp}}</span>
+      <span class="col-sm-10"><a href="/keyworker/{{ record.keyworker.staff_id }}">{{record.keyworker.given_name}} {{record.keyworker.surname}}, {{record.keyworker.age}}, {{expand_gender record.keyworker.gender}}</a></span>
     </li>
     {{/unless}}
     {{/each}}
+    <li><a id="assignStaff" href="/casefile/{{ casefile.casefile_id }}/assign#assign_staff" data-toggle="modal-remote" data-target="#modelStaffAssignment">Assign new staff member</a></li>
   </ul>
 </article>
+
+<div id="modelStaffAssignment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignStaff" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>

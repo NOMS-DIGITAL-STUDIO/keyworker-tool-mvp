@@ -49,8 +49,9 @@
           {{/if}}
         </li>
       </ul>
-      <ul class="list-inline">
-        <li><a id="assignStaff" href="/casefile/{{ casefile_id }}/assign#assign_staff" class="btn btn-primary" data-toggle="modal-remote" data-target="#modelStaffAssignment">Assign staff</a></li>
+      <ul class="list-unstyled">
+        <li><a href="/casefile/{{ casefile_id }}/assign/history#assignment_history">View previous staff assignments</a></li>
+        <li><a id="assignStaff" href="/casefile/{{ casefile_id }}/assign#assign_staff" data-toggle="modal-remote" data-target="#modelStaffAssignment">Assign new staff member</a></li>
       </ul>
     </div>
   </div>

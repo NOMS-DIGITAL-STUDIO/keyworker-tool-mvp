@@ -27,8 +27,12 @@ const objToFilteredList = (match) => (obj) => {
 
 const firstItem = (arr) => arr[0];
 
-const sortByTimestamp = (l) =>
-  l.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+const sortAllocationHistory = (l) =>
+  l.sort((a, b) => {
+    var diff = new Date(b.timestamp) - new Date(a.timestamp);
+    if (diff === 0) return (a.type === module.exports.types.Allocation && b.type === module.exports.types.Deallocation) ? -1 : 1; 
+    return diff;
+  });
 
 const picMostRecentCaseFileRecords = (l) =>
   objToList(l.reduce((a, car) => {
@@ -74,23 +78,23 @@ const getCaseAllocationRecord = () =>
 module.exports.listCaseAllocationRecordsForCasefile = (id) =>
   getCaseAllocationRecord()
     .then(objToFilteredList((x) => x.casefile_id === id))
-    .then(sortByTimestamp);
+    .then(sortAllocationHistory);
 
 module.exports.getCaseAllocationForCasefile = (id) =>
   getCaseAllocationRecord()
     .then(objToFilteredList((x) => x.casefile_id === id && x.type === module.exports.types.Allocation))
-    .then(sortByTimestamp)
+    .then(sortAllocationHistory)
     .then(firstItem);
 
 module.exports.listCaseAllocationRecordsForKeyworker = (id) =>
   getCaseAllocationRecord()
     .then(objToFilteredList((x) => x.staff_id === id))
-    .then(sortByTimestamp);
+    .then(sortAllocationHistory);
 
 module.exports.getCaseAllocationForKeyworker = (id) =>
   getCaseAllocationRecord()
     .then(objToFilteredList((x) => x.type === module.exports.types.Allocation))
-    .then(sortByTimestamp)
+    .then(sortAllocationHistory)
     .then(picMostRecentCaseFileRecords)
     .then((l) => l.filter((x) => x.staff_id === id));
 
