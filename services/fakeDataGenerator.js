@@ -46,6 +46,9 @@ const getNextIdentifier = () => {
 const getRandomTelephoneNumber = () =>
   '01' + ('00' + randomInt(99)).substr(-2) + ('000' + randomInt(999)).substr(-3) + ('0000' + randomInt(9999)).substr(-4);
 
+const pickRandomProfilePhotoUrl = (gender) =>
+  '/images/profiles/' + (gender === 'M' ? 'male' : 'female') + '/' + ('00' + randomInt(gender === 'M' ? 24 : 7 )).substr(-2) + '.png';
+
 const generateRegisters = () => {
   var out = [];
 
@@ -127,7 +130,7 @@ const generateKeyWorkers = (max) =>
   Promise.all(runMultipleTimes(generateKeyWorker, max));
 
 const generateOffender = () => {
-  var gender = 'M'; // randomInt(20) === 20 ? 'F' : 'M';
+  var gender = randomInt(20) === 20 ? 'F' : 'M';
   var given_names = (gender === 'M' ? male_given_names : female_given_names);
 
   return registerOffender({
@@ -136,7 +139,7 @@ const generateOffender = () => {
     cro_number: 'cro' + getNextIdentifier(),
     gender: gender,
     date_of_birth: moment().subtract(randomInt(365), 'days').subtract(17 + randomInt(55), 'years'),
-    image: 'http://placehold.it/150x150',
+    image: pickRandomProfilePhotoUrl(gender),
     given_name: given_names[randomInt(given_names.length) - 1],
     middle_names: (randomInt(2) === 1) ? given_names[randomInt(given_names.length) - 1] : undefined,
     surname: surnames[randomInt(surnames.length) - 1],
