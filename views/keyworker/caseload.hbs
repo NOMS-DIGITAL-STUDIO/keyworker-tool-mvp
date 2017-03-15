@@ -1,7 +1,7 @@
 <article id="{{ keyWorker.staff_id }}">
   <header>
     <h1>{{ keyWorker.given_name }} {{ keyWorker.surname }}, {{keyWorker.age}}, {{expand_gender keyWorker.gender}}
-      <small><a class="btn btn-link" href="/keyWorker/{{ keyWorker.staff_id }}">View details</a></small></h1>
+      <small><a class="btn btn-link" href="/keyworker/{{ keyWorker.staff_id }}">View details</a></small></h1>
     <p class="lead">Currently responsible for <span title="{{keyWorker.casefiles.length}} case files assigned">{{keyWorker.casefiles.length}}</span> case files.
         {{keyWorker.given_name}} has been given a caseload capacity of {{keyWorker.caseload_capacity}}.</p>
     {{#if keyWorker.caseload_capacity_over}}
@@ -15,7 +15,7 @@
     <h3>Assigned case files</h3>
     {{!--
     <ul class="list-inline">
-      <li><a class="btn btn-default" href="/keyWorker/{{ keyWorker.staff_id }}/assign">Assign Case</a></li>
+      <li><a class="btn btn-default" href="/keyworker/{{ keyWorker.staff_id }}/assign">Assign Case</a></li>
     </ul>
     --}}
   </div>
