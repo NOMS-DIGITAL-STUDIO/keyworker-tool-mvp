@@ -130,7 +130,7 @@ const generateKeyWorkers = (max) =>
   Promise.all(runMultipleTimes(generateKeyWorker, max));
 
 const generateOffender = () => {
-  var gender = randomInt(20) === 20 ? 'F' : 'M';
+  var gender = >randomInt(20) === 20 ? 'F' : 'M';
   var given_names = (gender === 'M' ? male_given_names : female_given_names);
 
   return registerOffender({
